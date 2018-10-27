@@ -3,12 +3,8 @@ function validEmail(email) {
   return !!emailRexEx.test(email);
 }
 function validPassword(password) {
-  if (password.lengh() === 8) return true;
-  return false;
+  return password.lengh() === 8;
 }
 function hasErrors(user) {
-  if (!(validEmail(user.email) && validPassword(user.password))) {
-    return true;
-  }
-  return false;
+  return !(validEmail(user.email) && validPassword(user.password));
 }
