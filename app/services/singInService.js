@@ -36,5 +36,6 @@ routerserv.post('/users', function(req, err) {
     if (!singin.haserrors(newuser)) hashPassword(newuser);
     else console.log('error validating data conditions');
     newuser.save();
+    console.log(`welcome! ${newuser.name} you are now registered and can log In`);
   }
 });
