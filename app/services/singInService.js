@@ -1,9 +1,7 @@
 const express = require('express'),
   user = require('./../models/user'),
-  logger = require('./../logger');
-
-let singin;
-const routerserv = express.Router;
+  logger = require('./../logger'),
+  singin = require('./../services/singInService');
 
 // posting on users
 exports.singup = (req, resp, err) => {
