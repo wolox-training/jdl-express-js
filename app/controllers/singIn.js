@@ -1,10 +1,27 @@
-const validEmail = email => {
+const crypt = require('bcryptjs'),
+  logger = require('./../logger');
+
+exports.validEmail = email => {
   const emailRexEx = new RegExp('^w+@wolox+?.[a-zA-Z]{2,3}$');
   return !!emailRexEx.test(email);
 };
-const validPassword = password => {
+exports.validPassword = password => {
   return password.lengh() === 8;
 };
-const hasErrors = user => {
-  return !(validEmail(user.email) && validPassword(user.password));
+exports.hasErrors = user => {
+  return !(this.validEmail(user.email) && this.validPassword(user.password));
+};
+
+exports.hashPassword = _user => {
+  crypt.hash(_user.password, 10, function(hash) {
+    _user.password = hash;
+  });
+};
+exports.validateReq = request => {
+  const { name, lastName, email, password } = request.body;
+
+  request.checkBody('name', 'field Name is required').notEmpty();
+  request.checkBody('lastName', 'field lastName is required').notEmpty();
+  request.checkBody('email', 'field email is required').notEmpty();
+  request.checkBody('password', 'field password is required').notEmpty();
 };
