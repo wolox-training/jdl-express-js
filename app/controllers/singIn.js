@@ -46,6 +46,10 @@ exports.signup = (req, res, err) => {
         .send(service.singup(req, res, err))
         .status(200)
         .end();
-    } else res.send('error, Invalid data');
+    } else
+      res
+        .send('error, Invalid data, this could either be a problem with your email or your password.')
+        .status(200)
+        .end();
   }
 };
