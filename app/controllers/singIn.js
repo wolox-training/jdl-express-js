@@ -1,5 +1,5 @@
 const crypt = require('bcryptjs'),
-  logger = require('./../logger');
+  service = require('./../services/singInService');
 
 exports.validEmail = email => {
   const emailRexEx = new RegExp('^w+@wolox+?.[a-zA-Z]{2,3}$');
@@ -24,4 +24,12 @@ exports.validateReq = request => {
   request.checkBody('lastName', 'field lastName is required').notEmpty();
   request.checkBody('email', 'field email is required').notEmpty();
   request.checkBody('password', 'field password is required').notEmpty();
+};
+exports.signup = (req, res, err) => {
+  if (err) res.status(500).send(err);
+  else {
+    res.send(service.singup(req, res, err));
+    res.status(200);
+    res.end();
+  }
 };

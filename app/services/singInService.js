@@ -1,5 +1,4 @@
-const express = require('express'),
-  user = require('./../models/user'),
+const user = require('./../models/user'),
   logger = require('./../logger'),
   singin = require('./../services/singInService');
 

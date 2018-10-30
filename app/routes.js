@@ -1,4 +1,4 @@
-const signIn = require('./services/singInService');
+const signIn = require('./controllers/singIn');
 
 exports.init = app => {
   // app.get('/endpoint/get/path', [], controller.methodGET);
