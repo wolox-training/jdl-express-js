@@ -1,7 +1,7 @@
 const user = require('./../models/user'),
-  logger = require('./../logger');
+  logger = require('./../logger'),
+  singin = require('./../services/singInService');
 
-// posting on users
 exports.singup = (req, resp, err) => {
   if (err) logger.log(`error saving your data ${err}`);
   else {
@@ -13,7 +13,16 @@ exports.singup = (req, resp, err) => {
     });
     newuser.save();
     resp.status(200);
+    resp.send(newuser);
     resp.end();
     logger.log(`welcome! ${newuser.name} you are now registered and can log In`);
+  }
+};
+
+exports.signuprole = (req, res, err) => {
+  const _user = req.body;
+  if (singin.exist(user)) {
+    const mail = _user.email;
+    const useradm = user.findAll({ where: { email: mail } });
   }
 };

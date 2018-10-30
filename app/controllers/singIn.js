@@ -1,4 +1,5 @@
 const crypt = require('bcryptjs'),
+  _user = require('./../models/user'),
   service = require('./../services/singInService');
 
 exports.validEmail = email => {
@@ -23,15 +24,25 @@ exports.validateReq = request => {
   request.checkBody('email', 'field email is required').notEmpty();
   request.checkBody('password', 'field password is required').notEmpty();
 };
+exports.exist = req => {
+  const usermail = req.body.email;
+  const user = _user.findAll({ where: { email: usermail } });
+  return user == null;
+};
+
+exports.sesion = req => {
+  const usermail = req.body.email;
+  return _user.findAll({ attributes: ['sesion'] }, { where: { email: usermail } });
+};
+
+exports.admuser = (req, res, err) => {};
 exports.signup = (req, res, err) => {
-  this.validateReq(req);
-  req.body.password = this.hashPassword(req.body.password);
-  if (!this.hasErrors) {
-    if (err) res.status(500).send(err);
-    else {
+  if (err) res.send(err);
+  else {
+    this.validateReq(req);
+    req.body.password = this.hashPassword(req.body.password);
+    if (!this.hasErrors(req.body)) {
       res.send(service.singup(req, res, err));
-      res.status(200);
-      res.end();
-    }
+    } else res.send('error, data not valid');
   }
 };
