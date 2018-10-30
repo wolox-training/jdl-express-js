@@ -1,10 +1,8 @@
 const user = require('./../models/user'),
-  logger = require('./../logger'),
-  singin = require('./../services/singInService');
+  logger = require('./../logger');
 
 // posting on users
 exports.singup = (req, resp, err) => {
-  singin.validateReq(req);
   if (err) logger.log(`error saving your data ${err}`);
   else {
     const newuser = user.build({
@@ -13,8 +11,6 @@ exports.singup = (req, resp, err) => {
       email: req.body.email,
       password: req.body.password
     });
-    if (!singin.haserrors(newuser)) singin.hashPassword(newuser);
-    else logger.log('error validating data conditions');
     newuser.save();
     resp.status(200);
     resp.end();

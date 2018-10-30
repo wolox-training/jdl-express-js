@@ -12,10 +12,8 @@ exports.hasErrors = user => {
   return !(this.validEmail(user.email) && this.validPassword(user.password));
 };
 
-exports.hashPassword = _user => {
-  crypt.hash(_user.password, 10, function(hash) {
-    _user.password = hash;
-  });
+exports.hashPassword = password => {
+  return crypt.hash(password, 10);
 };
 exports.validateReq = request => {
   const { name, lastName, email, password } = request.body;
@@ -26,10 +24,14 @@ exports.validateReq = request => {
   request.checkBody('password', 'field password is required').notEmpty();
 };
 exports.signup = (req, res, err) => {
-  if (err) res.status(500).send(err);
-  else {
-    res.send(service.singup(req, res, err));
-    res.status(200);
-    res.end();
+  this.validateReq(req);
+  req.body.password = this.hashPassword(req.body.password);
+  if (!this.hasErrors) {
+    if (err) res.status(500).send(err);
+    else {
+      res.send(service.singup(req, res, err));
+      res.status(200);
+      res.end();
+    }
   }
 };
