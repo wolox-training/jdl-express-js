@@ -42,7 +42,10 @@ exports.signup = (req, res, err) => {
     this.validateReq(req);
     req.body.password = this.hashPassword(req.body.password);
     if (!this.hasErrors(req.body)) {
-      res.send(service.singup(req, res, err));
-    } else res.send('error, data not valid');
+      res
+        .send(service.singup(req, res, err))
+        .status(200)
+        .end();
+    } else res.send('error, Invalid data');
   }
 };
