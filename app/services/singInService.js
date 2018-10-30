@@ -1,9 +1,7 @@
-const express = require('express'),
-  user = require('./../models/user'),
+const user = require('./../models/user'),
   logger = require('./../logger'),
   singin = require('./../services/singInService');
 
-// posting on users
 exports.singup = (req, resp, err) => {
   singin.validateReq(req);
   if (err) logger.log(`error saving your data ${err}`);
@@ -18,6 +16,7 @@ exports.singup = (req, resp, err) => {
     else logger.log('error validating data conditions');
     newuser.save();
     resp.status(200);
+    resp.send(newuser);
     resp.end();
     logger.log(`welcome! ${newuser.name} you are now registered and can log In`);
   }

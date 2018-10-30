@@ -1,7 +1,8 @@
-const signIn = require('./services/singInService');
+const signIn = require('./controllers/singIn'),
+  signUp = require('./controllers/signUp');
 
 exports.init = app => {
   // app.get('/endpoint/get/path', [], controller.methodGET);
-  // app.put('/endpoint/put/path', [], controller.methodPUT);
-  app.post('/endpoint/post/path', [], signIn.signup);
+  app.post('./../migrations/user', [], signUp.sesion);
+  app.post('./../migrations/user', [], signIn.signup);
 };

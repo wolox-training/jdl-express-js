@@ -1,5 +1,7 @@
 'use strict';
 
+const crypt = require('bcryptjs');
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('users', {
     name: {
@@ -24,5 +26,10 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = function(models) {
     // associations can be defined here
   };
+
   return User;
+};
+
+module.exports.validpw = (password, askpasword) => {
+  return crypt.compare(password, askpasword);
 };
