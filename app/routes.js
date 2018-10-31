@@ -3,5 +3,5 @@ const signIn = require('./controllers/singIn');
 exports.init = app => {
   // app.get('/endpoint/get/path', [], controller.methodGET);
   // app.put('/endpoint/put/path', [], controller.methodPUT);
-  app.post('/endpoint/post/path', [], signIn.signup);
+  app.post('/user', signIn.signUp);
 };
