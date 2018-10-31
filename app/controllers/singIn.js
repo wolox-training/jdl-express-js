@@ -1,36 +1,62 @@
 const crypt = require('bcryptjs'),
-  logger = require('./../logger'),
-  service = require('./../services/singInService');
+  _user = require('./../models').user;
 
-exports.validEmail = email => {
-  const emailRexEx = new RegExp('^w+@wolox+?.[a-zA-Z]{2,3}$');
-  return !!emailRexEx.test(email);
+const validEmail = email => {
+  const emailRexEx = new RegExp('[a-zA-Z]+@wolox+?.[a-zA-Z]{2,3}$');
+  return emailRexEx.test(email);
 };
-exports.validPassword = password => {
-  return password.lengh() === 8;
+const validPassword = password => {
+  return password.length === 8;
 };
-exports.hasErrors = user => {
-  return !(this.validEmail(user.email) && this.validPassword(user.password));
+const hasNoErrors = user => {
+  return validEmail(user.email) && validPassword(user.password);
 };
 
-exports.hashPassword = _user => {
-  crypt.hash(_user.password, 10, function(hash) {
-    _user.password = hash;
-  });
+const hashPassword = password => {
+  return crypt.hash(password, 10);
 };
-exports.validateReq = request => {
-  const { name, lastName, email, password } = request.body;
+const validateReq = request => {
+  const { name, lastName, email, password } = request;
 
   request.checkBody('name', 'field Name is required').notEmpty();
   request.checkBody('lastName', 'field lastName is required').notEmpty();
   request.checkBody('email', 'field email is required').notEmpty();
   request.checkBody('password', 'field password is required').notEmpty();
 };
-exports.signup = (req, res, err) => {
-  if (err) res.send(err);
-  else {
-    res.send(service.singup(req, res, err));
-    res.status(200);
-    res.end();
-  }
+const exist = req => {
+  const usermail = req.body.email;
+  const user = _user.findAll({ where: { email: usermail } });
+  return user == null;
+};
+
+const sesion = req => {
+  const usermail = req.body.email;
+  return _user.findAll({ attributes: ['sesion'] }, { where: { email: usermail } });
+};
+
+const admUser = (req, res, err) => {};
+
+exports.signUp = async (req, res) => {
+  // validateReq(req);
+  const user = req.body;
+  if (hasNoErrors(user)) {
+    const encryptpw = await hashPassword(user.password);
+    return _user
+      .create({
+        name: user.name,
+        lastName: user.lastName,
+        email: user.email,
+        password: encryptpw,
+        role: user.role,
+        sesion: false
+      })
+      .then(created => {
+        res.json(created).end();
+      })
+      .catch(err => {
+        res.status(503);
+        res.send(err);
+      });
+  } else
+    res.send('error, Invalid data, this could either be a problem with your email or your password.').end();
 };

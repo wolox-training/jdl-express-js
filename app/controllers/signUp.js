@@ -1,23 +1,36 @@
 const _user = require('./../models/user'),
-  service = require('./../services/singUpService'),
   token = require('jsonwebtoken');
 
-exports.giveToken = user => {
+const giveToken = user => {
   return token.sign({
     _user: user
   });
 };
-exports.valid = req => {
+const valid = req => {
   const usermail = req.body.email;
   const user = _user.findAll({ attributes: ['email', 'password'] }, { where: { email: usermail } });
   return _user.validpw(user.password, req.body.password) && usermail === user.email;
 };
 
-exports.sesion = (req, res, err) => {
-  if (err) res.send(err);
-  else {
-    res.send(service.autentication(req, res, err));
-    res.status(200);
-    res.end();
+const autentication = (req, res) => {
+  const usermail = req.body.email;
+  if (valid(req)) {
+    const validation = giveToken(usermail);
+    return ['valid-token', validation];
   }
+};
+
+exports.sesion = (req, res) => {
+  const usermail = req.body.email;
+  const user = _user.findAll({ where: { email: usermail } });
+  user.update({ sesion: true });
+  user.save();
+  return autentication(req, res)
+    .then(tokenSesion => {
+      res.json(tokenSesion);
+    })
+    .catch(err => {
+      res.status(503);
+      res.send(err);
+    });
 };
