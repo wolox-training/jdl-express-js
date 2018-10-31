@@ -33,8 +33,29 @@ const sesion = req => {
   const usermail = req.body.email;
   return _user.findAll({ attributes: ['sesion'] }, { where: { email: usermail } });
 };
+const isAdmin = user => {
+  const usermail = user.email;
+  return _user.findAll({ attributes: ['role'] }, { where: { email: usermail } });
+};
 
-const admUser = (req, res, err) => {};
+exports.admUser = (req, res) => {
+  const userToUpdate = req.body.updUser;
+  const userUpdater = req.body.userUpdater;
+  if (exist(userUpdater)) {
+    if (sesion(userUpdater) && isAdmin(userUpdater)) {
+      const user = _user.findAll({ where: { email: userToUpdate.email } });
+      user.update({ role: ' admin ' });
+      user.save();
+    }
+  } else {
+    this.signUp(userToUpdate)
+      .then(created => {
+        res.json(created).end();
+      })
+      .catch(req.error)
+      .throw(req.error);
+  }
+};
 
 exports.signUp = async (req, res) => {
   // validateReq(req);
