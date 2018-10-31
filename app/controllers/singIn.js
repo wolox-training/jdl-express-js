@@ -8,7 +8,7 @@ const validEmail = email => {
 const validPassword = password => {
   return password.length === 8;
 };
-const hasErrors = user => {
+const hasNoErrors = user => {
   return validEmail(user.email) && validPassword(user.password);
 };
 
@@ -39,7 +39,7 @@ const admUser = (req, res, err) => {};
 exports.signUp = async (req, res) => {
   // validateReq(req);
   const user = req.body;
-  if (hasErrors(user)) {
+  if (hasNoErrors(user)) {
     const encryptpw = await hashPassword(user.password);
     _user
       .create({
@@ -53,8 +53,10 @@ exports.signUp = async (req, res) => {
       .then(created => {
         res.json(created).end();
       })
-      .catch(req.error)
-      .throw(req.error);
+      .catch(err => {
+        res.status(503);
+        res.send(err);
+      });
   } else
     res.send('error, Invalid data, this could either be a problem with your email or your password.').end();
 };
