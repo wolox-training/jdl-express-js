@@ -1,5 +1,6 @@
 const crypt = require('bcryptjs'),
-  _user = require('./../models').user;
+  _user = require('./../models').user,
+  usController = require('./userController');
 
 const validEmail = email => {
   const emailRexEx = new RegExp('[a-zA-Z]+@wolox+?.[a-zA-Z]{2,3}$');
@@ -15,34 +16,12 @@ const hasErrors = user => {
 const hashPassword = password => {
   return crypt.hash(password, 10);
 };
-const validateReq = request => {
-  const { name, lastName, email, password } = request;
-
-  request.checkBody('name', 'field Name is required').notEmpty();
-  request.checkBody('lastName', 'field lastName is required').notEmpty();
-  request.checkBody('email', 'field email is required').notEmpty();
-  request.checkBody('password', 'field password is required').notEmpty();
-};
-const exist = req => {
-  const usermail = req.body.email;
-  const user = _user.findAll({ where: { email: usermail } });
-  return user == null;
-};
-
-const sesion = req => {
-  const usermail = req.body.email;
-  return _user.findAll({ attributes: ['sesion'] }, { where: { email: usermail } });
-};
-const isAdmin = user => {
-  const usermail = user.email;
-  return _user.findAll({ attributes: ['role'] }, { where: { email: usermail } });
-};
 
 exports.admUser = (req, res) => {
   const userToUpdate = req.body.updUser;
   const userUpdater = req.body.userUpdater;
-  if (exist(userUpdater)) {
-    if (sesion(userUpdater) && isAdmin(userUpdater)) {
+  if (usController.exist(userUpdater)) {
+    if (usController.activeSesion(userUpdater) && usController.isAdmin(userUpdater)) {
       const user = _user.findAll({ where: { email: userToUpdate.email } });
       user.update({ role: ' admin ' });
       user.save();
@@ -58,7 +37,6 @@ exports.admUser = (req, res) => {
 };
 
 exports.signUp = async (req, res) => {
-  // validateReq(req);
   const user = req.body;
   if (hasErrors(user)) {
     const encryptpw = await hashPassword(user.password);
