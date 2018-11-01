@@ -1,31 +1,34 @@
 const _user = require('./../models/user'),
-  token = require('jsonwebtoken');
+  token = require('jsonwebtoken'),
+  secret = require('./../../config/index').config;
 
 const giveToken = user => {
-  return token.sign({
-    _user: user
-  });
+  return token.sign(
+    {
+      _user: user
+    },
+    secret.session.secret
+  );
 };
-const valid = req => {
+const valid = async req => {
   const usermail = req.body.email;
-  const user = _user.findAll({ attributes: ['email', 'password'] }, { where: { email: usermail } });
+  const user = await _user.findAll({ attributes: ['email', 'password'] }, { where: { email: usermail } });
   return _user.validpw(user.password, req.body.password) && usermail === user.email;
 };
 
-const autentication = (req, res) => {
+const autentication = req => {
   const usermail = req.body.email;
   if (valid(req)) {
-    const validation = giveToken(usermail);
-    return ['valid-token', validation];
+    return { 'valid-token': giveToken(usermail) };
   }
 };
 
-exports.sesion = (req, res) => {
+exports.sesion = async (req, res) => {
   const usermail = req.body.email;
-  const user = _user.findAll({ where: { email: usermail } });
+  const user = await _user.findAll({ where: { email: usermail } });
   user.update({ sesion: true });
   user.save();
-  return autentication(req, res)
+  return autentication(req)
     .then(tokenSesion => {
       res.json(tokenSesion);
     })
