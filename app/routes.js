@@ -1,4 +1,4 @@
-const signIn = require('./controllers/singIn'),
+const signIn = require('./controllers/signIn'),
   signUp = require('./controllers/signUp');
 
 exports.init = app => {
