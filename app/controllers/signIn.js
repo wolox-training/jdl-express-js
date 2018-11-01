@@ -1,6 +1,6 @@
-const _user = require('./../models/user'),
+const _user = require('../models/user'),
   token = require('jsonwebtoken'),
-  secret = require('./../../config/index').config;
+  secret = require('../../config/index').config;
 
 const giveToken = user => {
   return token.sign(
