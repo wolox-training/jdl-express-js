@@ -1,8 +1,8 @@
-const _user = require('./../models').user;
+const _user = require('./../models').user,
+  userControl = require('./../controllers/userController');
 
 exports.userList = async (req, res) => {
-  const usermail = req.body.email;
-  if (await _user.findAll({ attributes: ['sesion'] }, { where: { email: usermail } }).data) {
+  if (userControl.authenticated(req)) {
     const limit = req.body.limit;
     const pages = req.body.page;
     return _user
