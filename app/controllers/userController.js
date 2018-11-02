@@ -19,11 +19,11 @@ const isAdmin = async user => {
   return role === 'admin';
 };
 
-const authenticated = (req, res) => {
+const authenticated = req => {
   if (activeSesion(req)) {
     const token = req.cookie;
     return jwt.verify(token, secretk.session.secret).then(decoded => {
-      res.send(decoded);
+      exist(decoded);
     });
   }
 };
