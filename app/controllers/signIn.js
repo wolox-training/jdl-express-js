@@ -12,18 +12,20 @@ const giveToken = user => {
 };
 const valid = req => {
   const usermail = req.body.email;
-  const user = _user
-    .findAll({ attributes: ['email', 'password'] }, { where: { email: usermail } })
-    .then(() => {
-      return _user.validpw(user.password, req.body.password) && usermail === user.email;
-    });
+  _user.findAll({ attributes: ['email', 'password'] }, { where: { email: usermail } }).then(user => {
+    return _user.validpw(user.password, req.body.password) && usermail === user.email;
+  });
 };
 
 const autentication = req => {
   const usermail = req.body.email;
-  if (valid(req)) {
-    return { 'valid-token': giveToken(usermail) };
-  }
+  return valid(req)
+    .then(cookie => {
+      cookie = { 'valid-token': giveToken(usermail) };
+    })
+    .catch(error => {
+      throw error;
+    });
 };
 
 exports.sesion = (req, res) => {
