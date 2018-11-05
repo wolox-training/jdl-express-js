@@ -12,8 +12,8 @@ const giveToken = user => {
 };
 const valid = req => {
   const usermail = req.body.email;
-  _user.findAll({ attributes: ['email', 'password'] }, { where: { email: usermail } }).then(user => {
-    return _user.validpw(user.password, req.body.password) && usermail === user.email;
+  return _user.findAll({ attributes: ['email', 'password'] }, { where: { email: usermail } }).then(user => {
+    _user.validpw(user.password, req.body.password) && usermail === user.email;
   });
 };
 
@@ -30,15 +30,19 @@ const autentication = req => {
 
 exports.sesion = (req, res) => {
   const usermail = req.body.email;
-  const user = _user.findAll({ where: { email: usermail } }).then(() => {
-    user.update({ sesion: true }).then(user.save());
-  });
-  return autentication(req)
-    .then(tokenSesion => {
-      res.cookie(tokenSesion);
+  return _user
+    .findAll({ where: { email: usermail } })
+    .then(user => {
+      user.update({ sesion: true });
     })
-    .catch(err => {
-      res.status(503);
-      res.send(err);
-    });
+    .then(
+      autentication(req)
+        .then(tokenSesion => {
+          res.cookie(tokenSesion);
+        })
+        .catch(err => {
+          res.status(503);
+          res.send(err);
+        })
+    );
 };
