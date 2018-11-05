@@ -30,6 +30,6 @@ module.exports = (sequelize, DataTypes) => {
   return User;
 };
 
-module.exports.validpw = (password, askpasword) => {
-  return crypt.compare(password, askpasword);
+module.exports.validpw = async (password, askpasword) => {
+  await crypt.compare(password, askpasword);
 };

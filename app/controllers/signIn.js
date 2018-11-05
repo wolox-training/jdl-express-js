@@ -10,10 +10,13 @@ const giveToken = user => {
     secret.session.secret
   );
 };
-const valid = async req => {
+const valid = req => {
   const usermail = req.body.email;
-  const user = await _user.findAll({ attributes: ['email', 'password'] }, { where: { email: usermail } });
-  return _user.validpw(user.password, req.body.password) && usermail === user.email;
+  const user = _user
+    .findAll({ attributes: ['email', 'password'] }, { where: { email: usermail } })
+    .then(() => {
+      return _user.validpw(user.password, req.body.password) && usermail === user.email;
+    });
 };
 
 const autentication = req => {
@@ -23,14 +26,14 @@ const autentication = req => {
   }
 };
 
-exports.sesion = async (req, res) => {
+exports.sesion = (req, res) => {
   const usermail = req.body.email;
-  const user = await _user.findAll({ where: { email: usermail } });
-  user.update({ sesion: true });
-  user.save();
+  const user = _user.findAll({ where: { email: usermail } }).then(() => {
+    user.update({ sesion: true }).then(user.save());
+  });
   return autentication(req)
     .then(tokenSesion => {
-      res.json(tokenSesion);
+      res.cookie(tokenSesion);
     })
     .catch(err => {
       res.status(503);
