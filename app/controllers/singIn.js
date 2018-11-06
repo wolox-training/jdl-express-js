@@ -41,7 +41,7 @@ exports.signUp = async (req, res) => {
   const user = req.body;
   if (hasNoErrors(user)) {
     const encryptpw = await hashPassword(user.password);
-    _user
+    return _user
       .create({
         name: user.name,
         lastName: user.lastName,
@@ -59,6 +59,7 @@ exports.signUp = async (req, res) => {
       .catch(error => {
         if (error.message === 'notNull Violation: user.lastName cannot be null')
           throw new Error('there are missing fields, please verify');
+
       });
   } else
     res
