@@ -5,5 +5,5 @@ exports.init = app => {
   // app.get('/endpoint/get/path', [], controller.methodGET);
   // app.put('/endpoint/put/path', [], controller.methodPUT);
   app.post('/user', signIn.signUp);
-  app.get('/listOfUsers', listOfUsers.userList);
+  app.get('/user', listOfUsers.userList);
 };
