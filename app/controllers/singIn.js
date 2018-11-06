@@ -59,7 +59,6 @@ exports.signUp = async (req, res) => {
       .catch(error => {
         if (error.message === 'notNull Violation: user.lastName cannot be null')
           throw new Error('there are missing fields, please verify');
-
       });
   } else
     res
