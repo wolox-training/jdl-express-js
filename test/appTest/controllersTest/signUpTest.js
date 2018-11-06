@@ -78,38 +78,28 @@ describe('sign up without a name', () => {
       .send(user)
       .catch(error => {
         error.should.have.status(400);
-        expect(error.text).to.equal('notNull Violation: user.name cannot be null');
+        expect(error.message).to.equal('there are missing fields, please verify');
       })
       .then(done());
   });
 });
 
 describe('sign up without a lastname', () => {
-  it('When someone tries to sign up without a lastname , the request wont be resolved', done => {
-    console.log('=================pase=================');
+  it('When someone tries to sign up without a last name , the request wont be resolved', done => {
     const user = {
       name: 'lname',
       email: 'mail@wolox.ar',
       password: '12345qwe',
       role: 'Admin'
     };
-    console.log(
-      `==========${user.email}========${user.password}=========${user.role}==========${
-        user.name
-      }===================================`
-    );
     chai
       .request(app)
       .post('/user')
       .send(user)
       .catch(error => {
-        console.log(`=====================================${error}===================================`);
-        error.should.throw(error);
-        expect(error.text).to.equal('notNull Violation: user.lastName cannot be null');
+        error.should.have.status(400);
+        expect(error.message).to.equal('there are missing fields, please verify');
       })
-      .then(res => {
-        console.log(`=============================${res}+++++++++++++++++++++++++++++++`);
-        done();
-      });
+      .then(done());
   });
 });

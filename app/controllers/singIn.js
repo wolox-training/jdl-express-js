@@ -56,8 +56,10 @@ exports.signUp = async (req, res) => {
           .send(`A new user named: ${created.name}, has been created`)
           .end();
       })
-      .catch(req.error)
-      .throw(req.error);
+      .catch(error => {
+        if (error.message === 'notNull Violation: user.lastName cannot be null')
+          throw new Error('there are missing fields, please verify');
+      });
   } else
     res
       .status(400)
