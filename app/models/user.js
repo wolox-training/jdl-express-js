@@ -38,6 +38,14 @@ module.exports = (sequelize, DataTypes) => {
   return User;
 };
 
-module.exports.validpw = (password, askpasword) => {
+exports.validpw = (password, askpasword) => {
   return crypt.compare(password, askpasword);
+};
+
+exports.findWhereParam = (atributes, parameters) => {
+  return this.findAll({ attributes: [atributes] }, { where: { parameters } });
+};
+
+exports.findWhere = parameters => {
+  return this.findAll({ where: { parameters } });
 };

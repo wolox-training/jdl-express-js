@@ -3,27 +3,21 @@ const _user = require('./../models').user,
   secretk = require('../../config/index').config;
 
 const exist = usermail => {
-  const user = _user.findAll({ where: { email: usermail } });
-  return user == null;
-};
-
-const activeSesion = async req => {
-  const usermail = req.body.email;
-  const active = await _user.findAll({ attributes: ['sesion'] }, { where: { email: usermail } });
-  return active;
+  return _user.findWhere({ email: usermail }).then(user => {
+    user !== null || user !== undefined;
+  });
 };
 
 const isAdmin = async user => {
   const usermail = user.email;
-  const role = await _user.findAll({ attributes: ['role'] }, { where: { email: usermail } });
-  return role === 'admin';
+  return _user.findWhereParam(['role'], { email: usermail }).then(role => {
+    role === 'admin';
+  });
 };
 
 const authenticated = req => {
-  if (activeSesion(req)) {
-    const token = req.cookie;
-    return jwt.verify(token, secretk.session.secret).then(decoded => {
-      exist(decoded);
-    });
-  }
+  const token = req.cookie;
+  return jwt.verify(token, secretk.session.secret).then(decoded => {
+    exist(decoded);
+  });
 };
