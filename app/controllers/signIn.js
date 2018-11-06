@@ -13,7 +13,7 @@ const giveToken = user => {
 const valid = req => {
   const usermail = req.body.email;
   return _user.findAll({ attributes: ['email', 'password'] }, { where: { email: usermail } }).then(user => {
-    _user.validpw(user.password, req.body.password).then(validUser => {
+    return _user.validpw(user.password, req.body.password).then(validUser => {
       return validUser && usermail === user.email;
     });
   });
@@ -35,12 +35,12 @@ exports.sesion = (req, res) => {
   return _user
     .findAll({ where: { email: usermail } })
     .then(user => {
-      user.update({ sesion: true });
+      return user.update({ sesion: true });
     })
     .then(
       autentication(req)
         .then(tokenSesion => {
-          res
+          return res
             .cookie(tokenSesion)
             .status(200)
             .end();
