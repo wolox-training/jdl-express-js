@@ -20,12 +20,10 @@ const hashPassword = password => {
 exports.admUser = async (req, res) => {
   const userToUpdate = req.body.updUser;
   const userUpdater = req.body.userUpdater;
-  if (usController.exist(userUpdater)) {
-    if (usController.activeSesion(userUpdater) && usController.isAdmin(userUpdater)) {
-      const user = await _user.findAll({ where: { email: userToUpdate.email } });
-      user.update({ role: ' admin ' });
-      user.save().then(res.send(`the user ${userToUpdate} now has the role Admin`).status(200));
-    }
+  if (usController.activeSesion(userUpdater) && usController.isAdmin(userUpdater)) {
+    const user = await _user.findAll({ where: { email: userToUpdate.email } });
+    user.update({ role: ' admin ' });
+    user.save().then(res.send(`the user ${userToUpdate} now has the role Admin`).status(200));
   } else {
     this.signUp(userToUpdate)
       .then(created => {
