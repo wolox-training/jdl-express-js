@@ -20,7 +20,7 @@ const hashPassword = password => {
 exports.admUser = (req, res) => {
   const userToUpdate = req.body.updUser;
   const userUpdater = req.body.userUpdater;
-  usController.exist(userToUpdate).then(exist => {
+  return usController.exist(userToUpdate).then(exist => {
     if (!exist) {
       exports
         .signUp(userToUpdate)
@@ -30,9 +30,9 @@ exports.admUser = (req, res) => {
         .catch(req.error)
         .throw(req.error);
     } else {
-      usController.authenticated(userUpdater).then(userauth => {
+      return usController.authenticated(userUpdater).then(userauth => {
         if (userauth) {
-          usController.isAdmin(userUpdater).then(admin => {
+          return usController.isAdmin(userUpdater).then(admin => {
             if (admin) {
               return _user
                 .findAll({ where: { email: userToUpdate.email } })
@@ -41,7 +41,7 @@ exports.admUser = (req, res) => {
                 })
                 .then(res.send(`the user ${userToUpdate} now has the role Admin`).status(200));
             } else {
-              res
+              return res
                 .send(
                   `Error. credential no found, please make sure that ${userUpdater}, has an active session and is an admin`
                 )
