@@ -1,6 +1,7 @@
 const chai = require('chai'),
   app = require('./../../../app'),
-  expect = chai.expect;
+  expect = chai.expect,
+  dictum = require('dictum.js');
 
 describe('sign up with all correct data', () => {
   it('When all the data is correct we will get a message with the new user`s name', done => {
@@ -19,6 +20,10 @@ describe('sign up with all correct data', () => {
       .then(res => {
         expect(res.text).to.equal(`A new user named: ${user.name}, has been created`);
         expect(res).to.have.status(201);
+        dictum.chai(
+          res,
+          'When all the data is correct, we will get a message with the new user`s name, as a response'
+        );
         done();
       });
   });
