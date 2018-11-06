@@ -3,14 +3,14 @@ const _user = require('./../models').user,
   secretk = require('../../config/index').config;
 
 const exist = usermail => {
-  return _user.findWhere({ email: usermail }).then(user => {
-    user !== null || user !== undefined;
+  return _user.findAll({ where: { email: { $contains: [usermail] } } }).then(user => {
+    !!user;
   });
 };
 
-const isAdmin = async user => {
+const isAdmin = user => {
   const usermail = user.email;
-  return _user.findWhereParam(['role'], { email: usermail }).then(role => {
+  return _user.findAll({ params: ['role'] }, { where: { email: usermail } }).then(role => {
     role === 'admin';
   });
 };
