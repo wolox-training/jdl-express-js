@@ -3,5 +3,5 @@ const signIn = require('./controllers/signIn'),
 
 exports.init = app => {
   app.post('/user', signUp.signUp);
-  app.post('/user', signIn.sesion);
+  app.post('/user/sessions', signIn.sesion);
 };
