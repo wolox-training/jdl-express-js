@@ -37,7 +37,7 @@ exports.admUser = (req, res) => {
               return _user
                 .findAll({ where: { email: userToUpdate.email } })
                 .then(user => {
-                  user.update({ role: ' admin ' });
+                  return user.update({ role: ' admin ' });
                 })
                 .then(res.send(`the user ${userToUpdate} now has the role Admin`).status(200));
             } else {
