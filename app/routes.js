@@ -1,4 +1,5 @@
-const signIn = require('./controllers/singIn');
+const signIn = require('./controllers/singIn'),
+  listOfUsers = require('./controllers/userList');
 
 exports.init = app => {
   // app.get('/endpoint/get/path', [], controller.methodGET);
