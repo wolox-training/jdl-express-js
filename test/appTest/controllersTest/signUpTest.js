@@ -43,7 +43,7 @@ describe('sign up without an email', () => {
       .post('/user')
       .send(user)
       .catch(error => {
-        expect(error.toString()).to.equal('Error: Bad Request');
+        expect(error.message).to.equal('Error: Bad Request');
       })
       .then(done());
   });
@@ -63,7 +63,7 @@ describe('sign up with an unsafe password', () => {
       .post('/user')
       .send(user)
       .catch(error => {
-        expect(error.toString()).to.equal('Error: Bad Request');
+        expect(error.message).to.equal('Error: Bad Request');
       })
       .then(done());
   });
