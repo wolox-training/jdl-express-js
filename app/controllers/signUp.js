@@ -1,5 +1,5 @@
 const crypt = require('bcryptjs'),
-  _user = require('./../models').user;
+  _user = require('../models').user;
 
 const validEmail = email => {
   const emailRexEx = new RegExp('[a-zA-Z]+@wolox+?.[a-zA-Z]{2,3}$');

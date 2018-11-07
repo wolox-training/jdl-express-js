@@ -27,14 +27,6 @@ module.exports = {
         isAlphanumeric: true,
         type: Sequelize.STRING
       },
-      role: {
-        allowNull: true,
-        type: Sequelize.STRING
-      },
-      sesion: {
-        allowNull: true,
-        type: Sequelize.BOOLEAN
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
