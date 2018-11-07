@@ -68,18 +68,12 @@ exports.signUp = async (req, res) => {
         sesion: false
       })
       .then(created => {
-        res
-          .status(201)
-          .send(`A new user named: ${created.name}, has been created`)
-          .end();
+        res.json(created).end();
       })
-      .catch(error => {
-        if (error.message === 'notNull Violation: user.lastName cannot be null')
-          throw new Error('there are missing fields, please verify');
+      .catch(err => {
+        res.status(503);
+        res.send(err);
       });
   } else
-    res
-      .status(400)
-      .send('error, Invalid data, this could either be a problem with your email or your password.')
-      .end();
+    res.send('error, Invalid data, this could either be a problem with your email or your password.').end();
 };

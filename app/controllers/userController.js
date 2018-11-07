@@ -3,7 +3,7 @@ const _user = require('./../models').user,
   secretk = require('../../config/index').config;
 
 const exist = usermail => {
-  return _user.findAll({ where: { email: { $contains: [usermail] } } }).then(user => {
+  return _user.findAll({ where: { email: usermail } }).then(user => {
     return !!user;
   });
 };

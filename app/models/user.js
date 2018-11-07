@@ -3,7 +3,7 @@
 const crypt = require('bcryptjs');
 
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define('users', {
+  const User = sequelize.define('user', {
     name: {
       allowNull: false,
       type: DataTypes.STRING
@@ -21,6 +21,14 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       isAlphanumeric: true,
       type: DataTypes.STRING
+    },
+    role: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
+    sesion: {
+      allowNull: true,
+      type: DataTypes.BOOLEAN
     }
   });
   User.associate = function(models) {
