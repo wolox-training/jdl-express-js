@@ -22,7 +22,7 @@ exports.admUser = (req, res) => {
   const userUpdater = req.body.userUpdater;
   return usController.exist(userToUpdate).then(exist => {
     if (!exist) {
-      exports
+      return exports
         .signUp(userToUpdate)
         .then(created => {
           res.json(created).end();
