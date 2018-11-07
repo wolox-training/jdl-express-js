@@ -38,6 +38,6 @@ module.exports = (sequelize, DataTypes) => {
   return User;
 };
 
-module.exports.validpw = (password, askpasword) => {
+exports.validpw = (password, askpasword) => {
   return crypt.compare(password, askpasword);
 };
