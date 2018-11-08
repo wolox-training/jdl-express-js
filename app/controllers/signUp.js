@@ -3,7 +3,7 @@ const crypt = require('bcryptjs'),
   usController = require('./userController');
 
 const validEmail = email => {
-  const emailRexEx = new RegExp('[a-zA-Z][0-9]+@wolox+?.[a-zA-Z]{2,3}$');
+  const emailRexEx = new RegExp('[a-zA-Z0-9]+@wolox+?.[a-zA-Z]{2,3}$');
   return emailRexEx.test(email);
 };
 const validPassword = password => {
