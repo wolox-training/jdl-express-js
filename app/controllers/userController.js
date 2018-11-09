@@ -8,7 +8,7 @@ const exist = usermail => {
   });
 };
 
-const isAdmin = user => {
+exports.isAdmin = user => {
   const usermail = user.email;
   return _user.findAll({ params: ['role'] }, { where: { email: usermail } }).then(role => {
     return role === 'admin';

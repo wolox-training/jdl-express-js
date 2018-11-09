@@ -7,7 +7,7 @@ const validEmail = email => {
   return emailRexEx.test(email);
 };
 const validPassword = password => {
-  return password.length === 8;
+  return password.length >= 8;
 };
 const hasNoErrors = user => {
   return validEmail(user.email) && validPassword(user.password);
