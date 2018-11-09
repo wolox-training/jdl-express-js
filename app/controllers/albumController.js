@@ -37,7 +37,7 @@ const pickAlbum = req => {
   return exports
     .getAlbums(req)
     .then(albumList => {
-      return albumList.albumId;
+      return albumList.albumid;
     })
     .catch(error => {
       error('Error picking the desired album:', error);
@@ -51,7 +51,7 @@ exports.purchaseAlbum = (req, res) => {
           return usControl.getId(req.header).then(id => {
             _album
               .create({
-                name: req.body.name,
+                name: album.name,
                 userid: id
               })
               .then(
