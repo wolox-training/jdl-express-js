@@ -15,7 +15,7 @@ const isAdmin = user => {
   });
 };
 
-const authenticated = req => {
+exports.authenticated = req => {
   const token = req.cookie;
   return jwt.verify(token, secretk.session.secret).then(decoded => {
     return exist(decoded);
