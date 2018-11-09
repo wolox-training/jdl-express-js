@@ -39,5 +39,5 @@ module.exports = (sequelize, DataTypes) => {
 };
 
 exports.validpw = (password, askpasword) => {
-  return crypt.compare(password, askpasword);
+  return crypt.compare(askpasword, password);
 };

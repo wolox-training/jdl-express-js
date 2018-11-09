@@ -1,10 +1,10 @@
 const _user = require('./../models').user,
   jwt = require('jsonwebtoken'),
-  secretk = require('../../config/index').config;
+  secretk = require('../../config');
 
 const exist = usermail => {
   return _user.findAll({ where: { email: usermail } }).then(user => {
-    return !!user;
+    return user;
   });
 };
 
@@ -22,8 +22,7 @@ exports.isAdmin = user => {
 };
 
 exports.authenticated = req => {
-  const token = req.header.accestoken;
-  return jwt.verify(token, secretk.session.secret).then(decoded => {
-    return exist(decoded);
-  });
+  const token = req.headers.accestoken;
+  const decoded = jwt.verify(token, secretk.common.session.secret);
+  return exist(decoded.mailofuser);
 };
