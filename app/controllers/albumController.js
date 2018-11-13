@@ -13,9 +13,7 @@ exports.getAlbums = (req, res) => {
             .end();
         })
         .catch(error => {
-          throw new Error(
-            'badGateway, the Album provider API is not available, please try again in a few minutes'
-          ).code(503);
+          res.send(`error: ${error}`).status(503);
         });
     } else {
       res

@@ -1,6 +1,6 @@
 const fetch = require('node-fetch'),
-  url = 'https://jsonplaceholder.typicode.com/';
+  url = process.env.API_URL;
 
 exports.getAll = () => {
-  return fetch('https://jsonplaceholder.typicode.com/albums').then(response => response.json());
+  return fetch(url).then(response => response.json());
 };
