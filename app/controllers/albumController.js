@@ -6,7 +6,7 @@ exports.getAlbums = (req, res) => {
   return usControl.authenticated(req).then(auth => {
     if (auth) {
       albumService
-        .getAll(req)
+        .getAll()
         .then(jsonres => {
           return res
             .json(jsonres)
@@ -14,9 +14,9 @@ exports.getAlbums = (req, res) => {
             .end();
         })
         .catch(error => {
-          throw new Error(
-            'badGateway, the Album provider API is not available, please try again in a few minutes'
-          ).code(503);
+          res
+            .send('badGateway, the Album provider API is not available, please try again in a few minutes')
+            .status(503);
         });
     } else {
       res
@@ -34,13 +34,15 @@ const exist = albumId => {
 };
 
 const pickAlbum = req => {
-  return exports
-    .getAlbums(req)
+  const id = req.params.id;
+  return albumService
+    .getAll(req)
     .then(albumList => {
-      return albumList.albumid;
+      console.log(`======================================${albumList}`);
+      return albumList;
     })
     .catch(error => {
-      error('Error picking the desired album:', error);
+      throw error;
     });
 };
 exports.purchaseAlbum = (req, res) => {
@@ -69,7 +71,7 @@ exports.purchaseAlbum = (req, res) => {
         }
       })
       .catch(error => {
-        error(`an error ocurred: ${error}, please verify you are logged in and retry`);
+        res.send(`an error ocurred: ${error}, please verify you are logged in and retry`).status(401);
       });
   });
 };

@@ -5,6 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     userid: DataTypes.INTEGER
   });
-  album.associate = function(models) {};
+  album.associate = function(models) {
+    album.belongsTo(models.user, { foreingKey: 'userid' });
+  };
   return album;
 };
