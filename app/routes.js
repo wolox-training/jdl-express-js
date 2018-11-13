@@ -3,10 +3,12 @@ const signIn = require('./controllers/signIn'),
   listOfusers = require('./controllers/userList'),
   albums = require('./controllers/albumController');
 
+
 exports.init = app => {
   app.post('/user', signUp.signUp);
   app.post('/user/sessions', signIn.sesion);
   app.post('/user/admin', signUp.admUser);
   app.get('/listOfUsers', listOfusers.userList);
+
   app.get('/albums', albums.getAlbums);
 };

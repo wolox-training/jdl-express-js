@@ -1,19 +1,26 @@
-const _user = require('../models/user'),
+const _user = require('../models').user,
   token = require('jsonwebtoken'),
-  secret = require('../../config/index').config;
+  secret = require('../../config'),
+  crypt = require('bcryptjs');
 
-const giveToken = user => {
-  return token.sign(
+const validpw = (password, askpasword) => {
+  return crypt.compare(askpasword, password);
+};
+
+const giveToken = async email => {
+  const validt = await token.sign(
     {
-      _user: user
+      mailofuser: email
     },
-    secret.session.secret
+    secret.common.session.secret
   );
+  return validt;
 };
 const valid = req => {
   const usermail = req.body.email;
-  return _user.findAll({ attributes: ['email', 'password'] }, { where: { email: usermail } }).then(user => {
-    return _user.validpw(user.password, req.body.password).then(validUser => {
+  return _user.findOne({ attributes: ['email', 'password'], where: { email: usermail } }).then(user => {
+    const password = user.get('password');
+    return validpw(password, req.body.password).then(validUser => {
       return validUser && usermail === user.email;
     });
   });
@@ -23,7 +30,7 @@ const autentication = req => {
   const usermail = req.body.email;
   return valid(req)
     .then(validSession => {
-      if (validSession) return { 'valid-token': giveToken(usermail) };
+      if (validSession) return giveToken(usermail);
     })
     .catch(error => {
       throw error;
@@ -31,23 +38,19 @@ const autentication = req => {
 };
 
 exports.sesion = (req, res) => {
-  const usermail = req.body.email;
-  return _user
-    .findAll({ where: { email: usermail } })
-    .then(user => {
-      return user.update({ sesion: true });
-    })
-    .then(
-      autentication(req)
-        .then(tokenSesion => {
-          return res
-            .cookie(tokenSesion)
-            .status(200)
-            .end();
-        })
-        .catch(err => {
-          res.status(503);
-          res.send(err);
-        })
-    );
+  const usermail = req.body;
+  return _user.findAll({ where: { email: usermail.email } }).then(
+    autentication(req)
+      .then(tokenSesion => {
+        return res
+          .cookie('accesToken', tokenSesion)
+          .send(tokenSesion)
+          .status(200)
+          .end();
+      })
+      .catch(err => {
+        res.status(503);
+        res.send(err);
+      })
+  );
 };
