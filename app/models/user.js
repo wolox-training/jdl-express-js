@@ -31,7 +31,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN
     }
   });
-  User.associate = function(models) {};
+  User.associate = function(models) {
+    User.hasMany(models.albums);
+  };
 
   return User;
 };

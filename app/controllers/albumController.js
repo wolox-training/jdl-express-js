@@ -29,7 +29,6 @@ exports.getAlbums = (req, res) => {
 
 const exist = (AlbumId, UserId) => {
   return _album.findAll({ where: { albumId: AlbumId, userId: UserId } }).then(album => {
-    console.log(`===========================${album}================`);
     return album;
   });
 };
@@ -50,8 +49,8 @@ exports.purchaseAlbum = (req, res) => {
     return usControl
       .getId(req.headers)
       .then(id => {
-        return exist(album.id, id).then(validPurchase => {
-          if (!validPurchase) {
+        return exist(album.id, id).then(purchasedAlbums => {
+          if (purchasedAlbums.length === 0) {
             return _album
               .create({
                 albumId: album.id,
