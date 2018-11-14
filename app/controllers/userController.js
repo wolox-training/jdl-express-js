@@ -9,14 +9,16 @@ const exist = usermail => {
 };
 
 exports.getId = user => {
-  const usermail = user.accestoken;
-  return _user.findAll({ params: ['id'] }, { where: { email: usermail } }).then(id => {
-    return id;
+  const usertoken = user.accestoken;
+  const usermail = jwt.verify(usertoken, secretk.common.session.secret);
+  return _user.findAll({ attributes: ['id'], where: { email: usermail.mailofuser }, raw: true }).then(id => {
+    return id[0].id;
   });
 };
+
 exports.isAdmin = user => {
   const usermail = user.email;
-  return _user.findAll({ params: ['role'] }, { where: { email: usermail } }).then(role => {
+  return _user.findAll({ attributes: ['role'], where: { email: usermail } }).then(role => {
     return role === 'admin';
   });
 };

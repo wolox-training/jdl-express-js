@@ -18,8 +18,12 @@ exports.userList = async (req, res) => {
         })
         .catch(err => {
           res.status(503);
-          res.send(err);
+          res.send(err).end();
         });
-    } else return res.status(401).send('Error, you need to sign In before performing this action');
+    } else
+      return res
+        .status(401)
+        .send('Error, you need to sign In before performing this action')
+        .end();
   });
 };

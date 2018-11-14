@@ -1,6 +1,6 @@
 const usControl = require('./userController'),
   albumService = require('./../services/albumService'),
-  _album = require('./../models/').album;
+  _album = require('./../models/').albums;
 
 exports.getAlbums = (req, res) => {
   return usControl.authenticated(req).then(auth => {
@@ -27,18 +27,18 @@ exports.getAlbums = (req, res) => {
   });
 };
 
-const exist = albumId => {
-  return _album.findAll({ where: { id: albumId } }).then(album => {
-    return !!album;
+const exist = (AlbumId, UserId) => {
+  return _album.findAll({ where: { albumId: AlbumId, userId: UserId } }).then(album => {
+    console.log(`===========================${album}================`);
+    return album;
   });
 };
 
 const pickAlbum = req => {
   const id = req.params.id;
   return albumService
-    .getAll(req)
+    .getById(id)
     .then(albumList => {
-      console.log(`======================================${albumList}`);
       return albumList;
     })
     .catch(error => {
@@ -47,28 +47,30 @@ const pickAlbum = req => {
 };
 exports.purchaseAlbum = (req, res) => {
   return pickAlbum(req).then(album => {
-    return exist(album.id)
-      .then(validPurchase => {
-        if (validPurchase) {
-          return usControl.getId(req.header).then(id => {
-            _album
+    return usControl
+      .getId(req.headers)
+      .then(id => {
+        return exist(album.id, id).then(validPurchase => {
+          if (!validPurchase) {
+            return _album
               .create({
-                name: album.name,
-                userid: id
+                albumId: album.id,
+                name: album.title,
+                userId: id
               })
               .then(
                 res
-                  .send(`the album ${req.body.name} was purchased!`)
+                  .send(`the album ${album.title} was purchased!`)
                   .status(200)
                   .end()
               )
               .catch(error => {
                 error('there has been an authentication problem:', error);
               });
-          });
-        } else {
-          res.send('this album has been purchased before, please pick anotherone').status(401);
-        }
+          } else {
+            res.send('this album has been purchased before, please pick anotherone').status(401);
+          }
+        });
       })
       .catch(error => {
         res.send(`an error ocurred: ${error}, please verify you are logged in and retry`).status(401);

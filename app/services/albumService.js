@@ -1,8 +1,9 @@
 const fetch = require('node-fetch'),
-  url = 'https://jsonplaceholder.typicode.com/';
+  url = process.env.API_URL;
 
-exports.getAll = desired => {
-  return desired
-    ? fetch(`${url}albums/${desired}`).then(response => response.json())
-    : fetch(`${url}albums/`).then(response => response.json());
+exports.getAll = () => {
+  return fetch(`${url}/albums`).then(response => response.json());
+};
+exports.getById = desired => {
+  return fetch(`${url}/${desired}`).then(response => response.json());
 };

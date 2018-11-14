@@ -31,9 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN
     }
   });
-  User.associate = function(models) {
-    User.hasMany(models.album, { foreingKey: 'userid' });
-  };
+  User.associate = function(models) {};
 
   return User;
 };
