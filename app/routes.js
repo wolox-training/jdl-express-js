@@ -13,4 +13,5 @@ exports.init = app => {
 
   app.get('/albums', albums.getAlbums);
   app.post('/getalbums/:id', albums.purchaseAlbum);
+  app.post('/user/:userId/albums', albums.purchaseAlbum);
 };

@@ -76,3 +76,40 @@ exports.purchaseAlbum = (req, res) => {
       });
   });
 };
+
+exports.purchasedAlbums = (req, res) => {
+  return usControl.authenticated(req).then(authenticated => {
+    if (authenticated) {
+      return usControl.isAdmin(req).then(isadmin => {
+        if (isadmin) {
+          const limit = req.body.limit;
+          const pages = req.body.page;
+          return _album
+            .findAndCountAll(
+              { attributes: ['albumId', 'title', 'userId'] },
+              { limit, offset: limit * (pages - 1) }
+            )
+            .then(userlist => {
+              const numberOfUsers = userlist.count;
+              const page = Math.ceil(numberOfUsers / limit);
+              return res.json(userlist, { numberOfUsers }, { numberOfPages: page }).end();
+            })
+            .catch(err => {
+              res.status(503);
+              res.send(err).end();
+            });
+        } else {
+          return _album
+            .findAll({ attributes: ['albumId', 'title', 'userId'], where: { userId: req.params.userId } })
+            .then(listOfAlbums => {
+              return res.json(listOfAlbums).end();
+            });
+        }
+      });
+    } else
+      return res
+        .status(401)
+        .send('Error, you need to sign In before performing this action')
+        .end();
+  });
+};
