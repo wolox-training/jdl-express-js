@@ -8,12 +8,10 @@ const exist = usermail => {
   });
 };
 
-exports.getId = user => {
+exports.getId = async user => {
   const usertoken = user.accestoken;
-  const usermail = jwt.verify(usertoken, secretk.common.session.secret);
-  return _user.findAll({ attributes: ['id'], where: { email: usermail.mailofuser }, raw: true }).then(id => {
-    return id[0].id;
-  });
+  const usermail = await jwt.verify(usertoken, secretk.common.session.secret);
+  return _user.findAll({ attributes: ['id'], where: { email: usermail.mailofuser }, raw: true });
 };
 
 exports.isAdmin = user => {
@@ -23,8 +21,8 @@ exports.isAdmin = user => {
   });
 };
 
-exports.authenticated = req => {
+exports.authenticated = async req => {
   const token = req.headers.accestoken;
-  const decoded = jwt.verify(token, secretk.common.session.secret);
+  const decoded = await jwt.verify(token, secretk.common.session.secret);
   return exist(decoded.mailofuser);
 };
