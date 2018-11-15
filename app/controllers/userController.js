@@ -21,8 +21,16 @@ exports.isAdmin = user => {
   });
 };
 
-exports.authenticated = async req => {
+exports.authenticated = req => {
   const token = req.headers.accestoken;
-  const decoded = await jwt.verify(token, secretk.common.session.secret);
-  return exist(decoded.mailofuser);
+  return jwt
+    .verify(token, secretk.common.session.secret)
+    .then(decoded => {
+      return exist(decoded.mailofuser);
+    })
+    .catch(error => {
+      if (error === 'TokenExpiredError') {
+        return error.message;
+      } else return `an unexpected error ocurred ${error}`;
+    });
 };

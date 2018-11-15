@@ -8,11 +8,13 @@ const validpw = (password, askpasword) => {
 };
 
 const giveToken = async email => {
+  const time = parseInt(secret.common.session.validTime);
   const validt = await token.sign(
     {
       mailofuser: email
     },
-    secret.common.session.secret
+    secret.common.session.secret,
+    { expiresIn: time }
   );
   return validt;
 };
