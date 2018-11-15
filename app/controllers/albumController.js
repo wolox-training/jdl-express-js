@@ -28,12 +28,12 @@ exports.getAlbums = (req, res) => {
 };
 
 const exist = (AlbumId, UserId) => {
-  return _album.findAll({ where: { albumId: AlbumId, userId: UserId } });
+  _album.findAll({ where: { albumId: AlbumId, userId: UserId } });
 };
 
 const pickAlbum = req => {
   const id = req.params.id;
-  return albumService.getById(id).catch(error => {
+  albumService.getById(id).catch(error => {
     throw error;
   });
 };
