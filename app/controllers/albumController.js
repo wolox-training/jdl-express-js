@@ -15,7 +15,9 @@ exports.getAlbums = (req, res) => {
         })
         .catch(error => {
           res
-            .send('badGateway, the Album provider API is not available, please try again in a few minutes')
+            .send(
+              `badGateway, the Album provider API is not available, please try again in a few minutes... error ${error}`
+            )
             .status(503);
         });
     } else {
@@ -82,17 +84,10 @@ exports.purchasedAlbums = (req, res) => {
     if (authenticated) {
       return usControl.isAdmin(req).then(isadmin => {
         if (isadmin) {
-          const limit = req.body.limit;
-          const pages = req.body.page;
           return _album
-            .findAndCountAll(
-              { attributes: ['albumId', 'title', 'userId'] },
-              { limit, offset: limit * (pages - 1) }
-            )
+            .findAll({ attributes: ['albumId', 'title', 'userId'] })
             .then(userlist => {
-              const numberOfUsers = userlist.count;
-              const page = Math.ceil(numberOfUsers / limit);
-              return res.json(userlist, { numberOfUsers }, { numberOfPages: page }).end();
+              return res.json(userlist).end();
             })
             .catch(err => {
               res.status(503);
