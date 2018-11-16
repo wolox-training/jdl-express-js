@@ -35,7 +35,7 @@ const exist = (AlbumId, UserId) => {
 
 const pickAlbum = req => {
   const id = req.params.id;
-  albumService.getById(id).catch(error => {
+  return albumService.getById(id).catch(error => {
     throw error;
   });
 };
