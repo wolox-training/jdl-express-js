@@ -10,6 +10,3 @@ exports.getById = desired => {
 exports.getPictures = id => {
   return fetch(`${url}/${id}/photos`).then(response => response.json());
 };
-exports.getAllPictures = () => {
-  return fetch(`${url}/photos`).then(response => response.json());
-};

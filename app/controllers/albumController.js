@@ -115,7 +115,7 @@ exports.albumPictures = (req, res) => {
     if (authenticated) {
       return usControl.isAdmin(req).then(isadmin => {
         if (isadmin) {
-          return albumService.getAllPictures().then(pictureList => {
+          return albumService.getPictures(id).then(pictureList => {
             res.json(pictureList).end();
           });
         } else {
