@@ -1,7 +1,7 @@
 language: node_js
 
 node_js:
-  - "8.9.4"
+  - "8.12.0"
 
 sudo: true
 
@@ -20,3 +20,6 @@ services:
 before_script:
   - psql -c "CREATE DATABASE bookstest;" -U postgres
   - node_modules/.bin/sequelize db:migrate
+  - npm run lint-fix
+
+cache: false
