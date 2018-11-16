@@ -87,7 +87,10 @@ exports.purchasedAlbums = (req, res) => {
           return _album
             .findAll({ attributes: ['albumId', 'title', 'userId'] })
             .then(userlist => {
-              return res.json(userlist).end();
+              return res
+                .json(userlist)
+                .status(200)
+                .end();
             })
             .catch(err => {
               res.status(503);
