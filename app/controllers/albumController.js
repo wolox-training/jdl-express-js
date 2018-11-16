@@ -16,7 +16,7 @@ exports.getAlbums = (req, res) => {
         .catch(error => {
           res
             .send(
-              `badGateway, the Album provider API is not available, please try again in a few minutes... error ${error}`
+              `badGateway, the Album provider API is not available, please try again in a few minutes error ${error}`
             )
             .status(503);
         });

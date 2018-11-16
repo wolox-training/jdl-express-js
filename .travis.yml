@@ -23,4 +23,3 @@ before_script:
   - npm run lint-fix
 
 cache: false
-
