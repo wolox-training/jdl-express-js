@@ -59,7 +59,7 @@ exports.purchaseAlbum = (req, res) => {
                   .end()
               )
               .catch(error => {
-                error('there has been an authentication problem:', error);
+                error('there has been an authentication problem:', error).status;
               });
           } else {
             res.send('this album has been purchased before, please pick anotherone').status(401);
