@@ -34,3 +34,9 @@ exports.authenticated = req => {
       } else return `an unexpected error ocurred ${error}`;
     });
 };
+
+exports.disableAll = req => {
+  return exports.authenticated(req).then(user => {
+    user.update({ session: false });
+  });
+};
