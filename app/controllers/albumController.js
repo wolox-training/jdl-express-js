@@ -100,7 +100,10 @@ exports.purchasedAlbums = (req, res) => {
           return _album
             .findAll({ attributes: ['albumId', 'title', 'userId'], where: { userId: req.params.userId } })
             .then(listOfAlbums => {
-              return res.json(listOfAlbums).end();
+              return res
+                .json(listOfAlbums)
+                .status(200)
+                .end();
             });
         }
       });

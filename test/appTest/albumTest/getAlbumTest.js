@@ -1,6 +1,6 @@
 const url = process.env.API_URL,
   validToken = process.env.TOKEN,
-  app = require('./../../../app'),
+  app = require('./../../../app.js'),
   chai = require('chai'),
   expect = chai.expect,
   nock = require('nock');
@@ -9,7 +9,7 @@ describe('Getting the album list from a provided API ', () => {
   it('if the User is loged in with a correct token a list of albums will be recived in JSON format', done => {
     nock(`'${url}'`, {
       reqheaders: {
-        asccesToken: validToken
+        accesToken: validToken
       }
     })
       .get('/albums')
@@ -29,19 +29,30 @@ describe('Getting the album list from a provided API, but not loged In ', () => 
 
 describe('Getting the album list of a user ', () => {
   it('if the User is loged in with a correct token a list of purchased albums will be recived in JSON format', done => {
-    const reqheaders = {
-      asccesToken: validToken
-    };
-
     chai
       .request(app)
-      .post('/user/:userId/albums')
-      .set(reqheaders)
-      .catch(error => {
-        expect(error.message).to.equal('Error: Bad Request');
-      })
+      .get('/user/0/albums')
+      .set('accestoken', validToken)
       .then(res => {
         expect(res).to.have.status(200);
+        done();
+      })
+      .catch(error => {
+        done();
+      });
+  });
+});
+
+describe('Getting the album list of a user without a correct token', () => {
+  it('if the User NOT is loged in with a correct token the request wont be resolved', done => {
+    chai
+      .request(app)
+      .get('/user/0/albums')
+      .then(res => {
+        expect(res).to.have.status(401);
+        done();
+      })
+      .catch(error => {
         done();
       });
   });
