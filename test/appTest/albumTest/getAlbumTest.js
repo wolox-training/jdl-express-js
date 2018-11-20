@@ -28,13 +28,14 @@ describe('Getting the album list from a provided API, but not loged In ', () => 
 });
 
 describe('Getting the album list of a user ', () => {
-  it('if the User is loged in with a correct token a list of purchased albums will be recived in JSON format', done => {
+  it('if the User is loged in with a correct token, but the user have not purchased any album yet an empty list of purchased albums will be recived in JSON format', done => {
     chai
       .request(app)
       .get('/user/0/albums')
       .set('accestoken', validToken)
       .then(res => {
         expect(res).to.have.status(200);
+        expect(res).to.have.lengthOf(0);
         done();
       })
       .catch(error => {
@@ -49,11 +50,35 @@ describe('Getting the album list of a user without a correct token', () => {
       .request(app)
       .get('/user/0/albums')
       .then(res => {
-        expect(res).to.have.status(401);
+        expect(res).to.have.status(500);
+        expect(res.message).to.equal('jwt must be provided');
         done();
       })
       .catch(error => {
         done();
       });
+  });
+});
+
+describe('purchasing an album, loged In, and then getting the list of purchased albums from this user', () => {
+  it('if the User is loged in with a correct token and an album was correctly purchased before, a list will apear with at least 1 album', done => {
+    chai
+      .request(app)
+      .get('/albums/6')
+      .set('accestoken', validToken)
+      .then(
+        chai
+          .request(app)
+          .get('/user/0/albums')
+          .set('accestoken', validToken)
+          .then(res => {
+            expect(res).to.have.status(200);
+            expect(res.body.length).to.have.lengthOf.at.least(1);
+            done();
+          })
+          .catch(error => {
+            done();
+          })
+      );
   });
 });

@@ -83,29 +83,14 @@ exports.purchasedAlbums = (req, res) => {
   return usControl.authenticated(req).then(authenticated => {
     if (authenticated) {
       return usControl.isAdmin(req).then(isadmin => {
-        if (isadmin) {
-          return _album
-            .findAll({ attributes: ['albumId', 'title', 'userId'] })
-            .then(userlist => {
-              return res
-                .json(userlist)
-                .status(200)
-                .end();
-            })
-            .catch(err => {
-              res.status(503);
-              res.send(err).end();
-            });
-        } else {
-          return _album
-            .findAll({ attributes: ['albumId', 'title', 'userId'], where: { userId: req.params.userId } })
-            .then(listOfAlbums => {
-              return res
-                .json(listOfAlbums)
-                .status(200)
-                .end();
-            });
-        }
+        const query = { attributes: ['albumId', 'title', 'userId'] };
+        if (!isadmin) query.where = { userId: req.params.userId };
+        return _album.findAll(query).then(listalbum => {
+          res
+            .json(listalbum)
+            .status(200)
+            .end();
+        });
       });
     } else
       return res
