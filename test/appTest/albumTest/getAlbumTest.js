@@ -35,7 +35,8 @@ describe('Getting the album list of a user ', () => {
       .set('accestoken', validToken)
       .then(res => {
         expect(res).to.have.status(200);
-        expect(res).to.have.lengthOf(0);
+        expect(res.body).to.have.lengthOf(0);
+        done();
       });
   });
 });
