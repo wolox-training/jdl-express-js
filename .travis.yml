@@ -21,5 +21,5 @@ before_script:
   - psql -c "CREATE DATABASE bookstest;" -U postgres
   - node_modules/.bin/sequelize db:migrate
   - npm run lint-fix
-
+  
 cache: false

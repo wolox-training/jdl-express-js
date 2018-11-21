@@ -8,15 +8,21 @@ const exist = usermail => {
   });
 };
 
+exports.getId = async user => {
+  const usertoken = user.accestoken;
+  const usermail = await jwt.verify(usertoken, secretk.common.session.secret);
+  return _user.findAll({ attributes: ['id'], where: { email: usermail.mailofuser }, raw: true });
+};
+
 exports.isAdmin = user => {
   const usermail = user.email;
-  return _user.findAll({ params: ['role'] }, { where: { email: usermail } }).then(role => {
+  return _user.findAll({ attributes: ['role'], where: { email: usermail } }).then(role => {
     return role === 'admin';
   });
 };
 
-exports.authenticated = req => {
+exports.authenticated = async req => {
   const token = req.headers.accestoken;
-  const decoded = jwt.verify(token, secretk.common.session.secret);
+  const decoded = await jwt.verify(token, secretk.common.session.secret);
   return exist(decoded.mailofuser);
 };

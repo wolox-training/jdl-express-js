@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
   User.associate = function(models) {
-    // associations can be defined here
+    User.belongsToMany(models.users_albums, { through: 'user_id' });
   };
 
   return User;

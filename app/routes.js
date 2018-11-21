@@ -9,5 +9,8 @@ exports.init = app => {
   app.post('/user/admin', signUp.admUser);
   app.get('/listOfUsers', listOfusers.userList);
 
+  // album
+
   app.get('/albums', albums.getAlbums);
+  app.post('/albums/:id', albums.purchaseAlbum);
 };
