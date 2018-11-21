@@ -15,7 +15,7 @@ exports.getId = async user => {
 };
 
 exports.isAdmin = user => {
-  const usermail = user.email;
+  const usermail = user.headers.accestoken;
   return _user.findAll({ attributes: ['role'], where: { email: usermail } }).then(role => {
     return role === 'admin';
   });

@@ -16,7 +16,7 @@ exports.getAlbums = (req, res) => {
         .catch(error => {
           res
             .send(
-              `badGateway, the Album provider API is not available, please try again in a few minutes error: ${error}`
+              `badGateway, the Album provider API is not available, please try again in a few minutes error ${error}`
             )
             .status(503);
         });
@@ -69,5 +69,26 @@ exports.purchaseAlbum = (req, res) => {
       .catch(error => {
         res.send(`an error ocurred: ${error}, please verify and retry`).status(401);
       });
+  });
+};
+
+exports.purchasedAlbums = (req, res) => {
+  return usControl.authenticated(req).then(authenticated => {
+    if (authenticated) {
+      return usControl.isAdmin(req).then(isadmin => {
+        const query = { attributes: ['albumId', 'title', 'userId'] };
+        if (!isadmin) query.where = { userId: req.params.userId };
+        return _album.findAll(query).then(listalbum => {
+          res
+            .json(listalbum)
+            .status(200)
+            .end();
+        });
+      });
+    } else
+      return res
+        .status(401)
+        .send('Error, you need to sign In before performing this action')
+        .end();
   });
 };
