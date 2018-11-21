@@ -31,10 +31,9 @@ describe('Getting the album list of a user ', () => {
   it('if the User is loged in with a correct token, but the user have not purchased any album yet an empty list of purchased albums will be recived in JSON format', done => {
     chai
       .request(app)
-      .get('/user/0/albums')
+      .get('/user/1/albums')
       .set('accestoken', validToken)
       .then(res => {
-        console.log(`===============+++++++++++++++${JSON.stringify(res)}`);
         expect(res).to.have.status(200);
         expect(res.body).to.have.lengthOf(0);
         done();
