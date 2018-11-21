@@ -114,26 +114,24 @@ exports.albumPictures = (req, res) => {
   return usControl.authenticated(req).then(authenticated => {
     if (authenticated) {
       return usControl.isAdmin(req).then(isadmin => {
-        if (isadmin) {
-          return albumService.getPictures(id).then(pictureList => {
-            res.json(pictureList).end();
-          });
-        } else {
-          return usControl
-            .getId(req.headers)
-            .then(userid => {
-              return exist(id, userid).then(purchasedAlbums => {
-                if (purchasedAlbums.length !== 0) {
-                  return albumService.getPictures(id).then(res.json(res).end());
-                } else {
-                  res.send('you havent purchased this album').status(401);
-                }
+        return albumService.getPictures(id).then(pictures => {
+          if (!isadmin) {
+            return usControl
+              .getId(req.headers)
+              .then(userid => {
+                return exist(id, userid).then(purchasedAlbums => {
+                  if (!purchasedAlbums.length) {
+                    res.json(pictures).end();
+                  } else {
+                    res.send('you havent purchased this album').status(401);
+                  }
+                });
+              })
+              .catch(error => {
+                res.send(`an error ocurred: ${error}, please verify and retry`).status(401);
               });
-            })
-            .catch(error => {
-              res.send(`an error ocurred: ${error}, please verify and retry`).status(401);
-            });
-        }
+          } else res.json(pictures).end();
+        });
       });
     } else {
       return res
