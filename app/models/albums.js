@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   albums.associate = function(models) {
-    albums.belongsTo(models.user, { through: 'user' });
+    albums.belongsToMany(models.users_albums, { through: 'album_id' });
   };
   return albums;
 };
