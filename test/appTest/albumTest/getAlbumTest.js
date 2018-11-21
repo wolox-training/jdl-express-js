@@ -1,6 +1,6 @@
 const url = process.env.API_URL,
   validToken = process.env.TOKEN,
-  app = require('./../../../app.js'),
+  app = require('./../../../app'),
   chai = require('chai'),
   expect = chai.expect,
   nock = require('nock');
