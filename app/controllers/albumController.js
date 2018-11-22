@@ -132,6 +132,11 @@ exports.albumPictures = (req, res) => {
           .send('you need to log in')
           .status(401)
           .end();
+      } else {
+        res
+          .send(`an unexpected error ocurred: ${error}`)
+          .status(401)
+          .end();
       }
     });
 };
