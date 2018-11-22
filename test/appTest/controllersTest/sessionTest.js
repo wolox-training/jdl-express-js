@@ -54,8 +54,6 @@ describe('log In, after sign Up with all correct data, being inactive until toke
       .post('/user')
       .send(user)
       .then(res => {
-        expect(res.text).to.equal(`A new user named: ${user.name}, has been created`);
-        expect(res).to.have.status(201);
         const data = {
           email: 'person@wolox.co',
           password: '12345qwe'
@@ -68,9 +66,6 @@ describe('log In, after sign Up with all correct data, being inactive until toke
           .then(respo => {
             const Cookies = respo.headers['set-cookie'].pop().split(';')[0],
               token = Cookies.substring(11);
-            expect(respo.text).to.equal(
-              `welcome! you can be inactive during ${sessiontime} minutes, before your session times out`
-            );
             chai
               .request(app)
               .get('/albums')
