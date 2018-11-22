@@ -23,6 +23,12 @@ exports.isAdmin = user => {
 
 exports.authenticated = async req => {
   const token = req.headers.accestoken;
-  const decoded = await jwt.verify(token, secretk.common.session.secret);
-  return exist(decoded.mailofuser);
+  try {
+    const decoded = await jwt.verify(token, secretk.common.session.secret);
+    return exist(decoded.mailofuser);
+  } catch (error) {
+    if (error === 'TokenExpiredError') {
+      return error.message;
+    } else return `an unexpected error ocurred: ${error}`;
+  }
 };

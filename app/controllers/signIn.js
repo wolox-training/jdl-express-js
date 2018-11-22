@@ -8,11 +8,13 @@ const validpw = (password, askpasword) => {
 };
 
 const giveToken = async email => {
+  const time = parseInt(secret.common.session.validTime);
   const validt = await token.sign(
     {
       mailofuser: email
     },
-    secret.common.session.secret
+    secret.common.session.secret,
+    { expiresIn: time }
   );
   return validt;
 };
@@ -39,12 +41,13 @@ const autentication = req => {
 
 exports.sesion = (req, res) => {
   const usermail = req.body;
+  const time = parseInt(secret.common.session.validTime) / 60;
   return _user.findAll({ where: { email: usermail.email } }).then(
     autentication(req)
       .then(tokenSesion => {
         return res
           .cookie('accesToken', tokenSesion)
-          .send(tokenSesion)
+          .send(`welcome! you can be inactive during ${time} minutes, before your session times out`)
           .status(200)
           .end();
       })
