@@ -68,7 +68,6 @@ describe('log In, after sign Up with all correct data, being inactive until toke
           .then(respo => {
             const Cookies = respo.headers['set-cookie'].pop().split(';')[0],
               token = Cookies.substring(11);
-            console.log(token);
             expect(respo.text).to.equal(
               `welcome! you can be inactive during ${sessiontime} minutes, before your session times out`
             );

@@ -5,7 +5,7 @@ const usControl = require('./userController'),
 exports.getAlbums = (req, res) => {
   return usControl.authenticated(req).then(auth => {
     if (auth) {
-      albumService
+      return albumService
         .getAll()
         .then(jsonres => {
           return res
@@ -15,11 +15,8 @@ exports.getAlbums = (req, res) => {
         })
         .catch(error => {
           res
-            .send('badGateway, the Album provider API is not available, please try again in a few minutes')
-            .status(503);
-          res
             .send(
-              `badGateway, the Album provider API is not available, please try again in a few minutes error: ${error}`
+              `badGateway, the Album provider API is not available, please try again in a few minutes error ${error}`
             )
             .status(503);
         });
@@ -33,12 +30,12 @@ exports.getAlbums = (req, res) => {
 };
 
 const exist = (AlbumId, UserId) => {
-  _album.findAll({ where: { albumId: AlbumId, userId: UserId } });
+  return _album.findAll({ where: { albumId: AlbumId, userId: UserId } });
 };
 
 const pickAlbum = req => {
   const id = req.params.id;
-  albumService.getById(id).catch(error => {
+  return albumService.getById(id).catch(error => {
     throw error;
   });
 };
@@ -47,22 +44,22 @@ exports.purchaseAlbum = (req, res) => {
     return usControl
       .getId(req.headers)
       .then(id => {
-        return exist(album.id, id).then(purchasedAlbums => {
-          if (purchasedAlbums.length === 0) {
+        return exist(album.id, id[0].id).then(purchasedAlbums => {
+          if (!purchasedAlbums.length) {
             return _album
               .create({
                 albumId: album.id,
                 name: album.title,
-                userId: id
+                userId: id[0].id
               })
               .then(
                 res
-                  .send(`the album ${album.title} was purchased!`)
+                  .send(`the album was purchased!`)
                   .status(200)
                   .end()
               )
               .catch(error => {
-                error('there has been an authentication problem:', error);
+                error('there has been an authentication problem:', error).status;
               });
           } else {
             res.send('this album has been purchased before, please pick anotherone').status(401);
@@ -70,7 +67,28 @@ exports.purchaseAlbum = (req, res) => {
         });
       })
       .catch(error => {
-        res.send(`an error ocurred: ${error}, please verify you are logged in and retry`).status(401);
+        res.send(`an error ocurred: ${error}, please verify and retry`).status(401);
       });
+  });
+};
+
+exports.purchasedAlbums = (req, res) => {
+  return usControl.authenticated(req).then(authenticated => {
+    if (authenticated) {
+      return usControl.isAdmin(req).then(isadmin => {
+        const query = { attributes: ['albumId', 'title', 'userId'] };
+        if (!isadmin) query.where = { userId: req.params.userId };
+        return _album.findAll(query).then(listalbum => {
+          res
+            .json(listalbum)
+            .status(200)
+            .end();
+        });
+      });
+    } else
+      return res
+        .status(401)
+        .send('Error, you need to sign In before performing this action')
+        .end();
   });
 };
