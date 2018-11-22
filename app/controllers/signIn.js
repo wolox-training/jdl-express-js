@@ -42,17 +42,13 @@ const autentication = req => {
 exports.sesion = (req, res) => {
   const usermail = req.body;
   const time = parseInt(secret.common.session.validTime) / 60;
-  return _user.findAll({ where: { email: usermail.email } }).then(user => {
-    return user.update({ sesion: true }).then(
+  return _user.findAll({ where: { email: usermail.email }, raw: true }).then(user => {
+    return _user.update({ sesion: true }, { where: { email: user[0].email } }).then(
       autentication(req)
         .then(tokenSesion => {
           return res
             .cookie('accesToken', tokenSesion)
-            .send(
-              `welcome ${
-                usermail.name
-              }! you can be inactive during ${time} minutes, before your session times out`
-            )
+            .send(`welcome! you can be inactive during ${time} minutes, before your session times out`)
             .status(200)
             .end();
         })
