@@ -47,11 +47,7 @@ exports.sesion = (req, res) => {
       .then(tokenSesion => {
         return res
           .cookie('accesToken', tokenSesion)
-          .send(
-            `welcome ${
-              usermail.name
-            }! you can be inactive during ${time} minutes, before your session times out`
-          )
+          .send(`welcome! you can be inactive during ${time} minutes, before your session times out`)
           .status(200)
           .end();
       })

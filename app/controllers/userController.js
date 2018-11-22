@@ -15,22 +15,20 @@ exports.getId = async user => {
 };
 
 exports.isAdmin = user => {
-  const usermail = user.email;
+  const usermail = user.headers.accestoken;
   return _user.findAll({ attributes: ['role'], where: { email: usermail } }).then(role => {
     return role === 'admin';
   });
 };
 
-exports.authenticated = req => {
+exports.authenticated = async req => {
   const token = req.headers.accestoken;
-  return jwt
-    .verify(token, secretk.common.session.secret)
-    .then(decoded => {
-      return exist(decoded.mailofuser);
-    })
-    .catch(error => {
-      if (error === 'TokenExpiredError') {
-        return error.message;
-      } else return `an unexpected error ocurred ${error}`;
-    });
+  try {
+    const decoded = await jwt.verify(token, secretk.common.session.secret);
+    return exist(decoded.mailofuser);
+  } catch (error) {
+    if (error === 'TokenExpiredError') {
+      return error.message;
+    } else return `an unexpected error ocurred: ${error}`;
+  }
 };
