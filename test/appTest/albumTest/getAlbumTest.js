@@ -1,6 +1,6 @@
 const url = process.env.API_URL,
   validToken = process.env.TOKEN,
-  app = require('./../../../app.js'),
+  app = require('./../../../app'),
   chai = require('chai'),
   expect = chai.expect,
   nock = require('nock');
@@ -31,7 +31,7 @@ describe('Getting the album list of a user ', () => {
   it('if the User is loged in with a correct token, but the user have not purchased any album yet an empty list of purchased albums will be recived in JSON format', done => {
     chai
       .request(app)
-      .get('/user/0/albums')
+      .get('/user/1/albums')
       .set('accestoken', validToken)
       .then(res => {
         expect(res).to.have.status(200);
@@ -111,6 +111,28 @@ describe('purchasing an album twice', () => {
   });
 });
 
+describe('purchasing an album, loged In, and then getting the list of album  pictures', () => {
+  it('if the User is loged in with a correct token and an album was correctly purchased before, a list will apear with at least 1 picture of the album', done => {
+    chai
+      .request(app)
+      .get('/albums/6')
+      .set('accestoken', validToken)
+      .then(
+        chai
+          .request(app)
+          .get('/albums/6/picture')
+          .set('accestoken', validToken)
+          .then(res => {
+            expect(res).to.have.status(200);
+            expect(res.body.length).to.have.lengthOf.at.least(1);
+            done();
+          })
+          .catch(error => {
+            done();
+          })
+      );
+  });
+});
 describe('purchasing an album, loged In, and then getting the list of purchased albums from this user', () => {
   it('if the User is loged in with a correct token and an album was correctly purchased before, a list will apear with at least 1 album', done => {
     chai
@@ -134,6 +156,36 @@ describe('purchasing an album, loged In, and then getting the list of purchased 
   });
 });
 
+describe('getting the picture list from a purchased the album', () => {
+  it('if the User is loged in with a correct token but the album was  not purchased before, an empty list will apear.', done => {
+    chai
+      .request(app)
+      .get('/albums/10/picture')
+      .set('accestoken', validToken)
+      .then(res => {
+        expect(res).to.have.status(200);
+        expect(res.body.length).to.have.lengthOf(0);
+        done();
+      })
+      .catch(error => {
+        done();
+      });
+  });
+});
+describe('getting the list of album pictures but without any bought album, and not loged In', () => {
+  it('if the User is NOT loged in without a correct token, and no album was not correctly purchased before, an empty list will apear', done => {
+    chai
+      .request(app)
+      .get('/albums/10/picture')
+      .then(res => {
+        expect(res).to.have.status(401);
+        done();
+      })
+      .catch(error => {
+        done();
+      });
+  });
+});
 describe('purchasing an album but not logged in', () => {
   it('if the User is NOT loged in with a correct token the request wont be resolved', done => {
     chai
