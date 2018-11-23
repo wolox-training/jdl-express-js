@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
   User.associate = function(models) {
-    User.hasMany(models.albums);
+    User.belongsToMany(models.users_albums, { through: 'user_id' });
   };
 
   return User;

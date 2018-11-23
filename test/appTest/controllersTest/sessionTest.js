@@ -59,6 +59,7 @@ describe('log In, after sign Up with all correct data, being inactive until toke
           email: 'person@wolox.co',
           password: '12345qwe'
         };
+        const sessiontime = parseInt(time) / 60;
         chai
           .request(app)
           .post('/user/sessions')
