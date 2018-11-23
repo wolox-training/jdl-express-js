@@ -31,8 +31,8 @@ exports.isauthenticated = async req => {
     const decoded = await jwt.verify(token, secretk.common.session.secret);
     return exist(decoded.mailofuser);
   } catch (error) {
-    if (error === 'TokenExpiredError') {
-      return error.message;
+    if (error.name === 'TokenExpiredError') {
+      return false;
     } else return `an unexpected error ocurred: ${error}`;
   }
 };

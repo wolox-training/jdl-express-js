@@ -41,11 +41,11 @@ describe('log In, after sign Up with all correct data', () => {
 });
 
 describe('log In, after sign Up with all correct data, being inactive until token gets invalid', () => {
-  it('When all the data is correct we will get a message with the new user`s name', done => {
+  it('if the token is not valid anymore the requests wont be resolved', done => {
     const user = {
       name: 'testperson',
       lastName: 'lname',
-      email: 'person@wolox.co',
+      email: 'aperson@wolox.co',
       password: '12345qwe',
       role: 'Admin'
     };
@@ -54,9 +54,9 @@ describe('log In, after sign Up with all correct data, being inactive until toke
       .request(app)
       .post('/user')
       .send(user)
-      .then(res => {
+      .then(() => {
         const data = {
-          email: 'person@wolox.co',
+          email: 'aperson@wolox.co',
           password: '12345qwe'
         };
         const sessiontime = parseInt(time) / 60;
@@ -67,14 +67,20 @@ describe('log In, after sign Up with all correct data, being inactive until toke
           .then(respo => {
             const Cookies = respo.headers['set-cookie'].pop().split(';')[0],
               token = Cookies.substring(11);
-            chai
-              .request(app)
-              .get('/albums')
-              .set('accestoken', token)
-              .then(resp => {
-                // expect(resp).to.not.have.status(200);
-                done();
-              });
+            setTimeout(() => {
+              chai
+                .request(app)
+                .get('/albums')
+                .set('accestoken', token)
+                .then(resp => {
+                  setTimeout(() => {
+                    expect(resp.text).to.equal(
+                      `unauthorized acces, you must log In before performing this action`
+                    );
+                    done();
+                  }, time);
+                });
+            }, sessiontime + 1000);
           });
       });
   });
@@ -110,7 +116,7 @@ describe('log In, after sign Up with all correct data,and then invalidating the 
               .request(app)
               .post('/user/sessions/invalidate_all')
               .set('accestoken', token)
-              .then(response => {
+              .then(() => {
                 _user
                   .findAll({ attributes: ['sesion'], where: { email: data.email }, raw: true })
                   .then(session => {
