@@ -21,11 +21,11 @@ exports.isAdmin = user => {
   });
 };
 exports.authenticated = async req => {
-  const validauth = await exports.isauthenticated(req);
-  const active = await exports.activesesion(req);
+  const validauth = await exports.isAuthenticated(req);
+  const active = await exports.activeSession(req);
   return validauth && active[0].sesion;
 };
-exports.isauthenticated = async req => {
+exports.isAuthenticated = async req => {
   const token = req.headers.accestoken;
   try {
     const decoded = await jwt.verify(token, secretk.common.session.secret);
@@ -36,8 +36,8 @@ exports.isauthenticated = async req => {
     } else return `an unexpected error ocurred: ${error}`;
   }
 };
-exports.activesesion = req => {
-  return exports.isauthenticated(req).then(user => {
+exports.activeSession = req => {
+  return exports.isAuthenticated(req).then(user => {
     return _user
       .findAll({ attributes: ['sesion'], where: { email: user.email }, raw: true })
       .then(session => {
@@ -46,7 +46,7 @@ exports.activesesion = req => {
   });
 };
 exports.disableAll = (req, res) => {
-  return exports.isauthenticated(req).then(user => {
+  return exports.isAuthenticated(req).then(user => {
     return _user.update({ sesion: false }, { where: { email: user.email } }).then(() => {
       res
         .send('the user is now inactive')
