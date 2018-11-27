@@ -1,9 +1,22 @@
 const fetch = require('node-fetch'),
+  { buildSchema, graphql } = require('graphql'),
+  albumController = require('./../controllers/albumController'),
   url = process.env.API_URL;
 
-exports.getAll = () => {
-  return fetch(`${url}/albums`).then(response => response.json());
+const schema = buildSchema(`
+  type Query {
+    getAlbum: [String]
+  }
+`);
+exports.get = {
+  _albums: () => {
+    return fetch(`${url}`).then(response => response.json());
+  }
 };
+exports.getAll = () => {
+  return graphql(schema, '{getAlbum}', albumController.getAlbums);
+};
+
 exports.getById = desired => {
   return fetch(`${url}/${desired}`).then(response => response.json());
 };

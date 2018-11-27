@@ -2,31 +2,33 @@ const usControl = require('./userController'),
   albumService = require('./../services/albumService'),
   _album = require('./../models/').albums;
 
-exports.getAlbums = (req, res) => {
-  return usControl.authenticated(req).then(auth => {
-    if (auth) {
-      return albumService
-        .getAll()
-        .then(jsonres => {
-          return res
-            .json(jsonres)
-            .status(200)
-            .end();
-        })
-        .catch(error => {
-          res
-            .send(
-              `badGateway, the Album provider API is not available, please try again in a few minutes error ${error}`
-            )
-            .status(503);
-        });
-    } else {
-      res
-        .send('unauthorized acces, you must log In before performing this action')
-        .status(401)
-        .end();
-    }
-  });
+exports.getAlbums = {
+  getAlbum: (req, res) => {
+    return usControl.authenticated(req).then(auth => {
+      if (auth) {
+        return albumService.get
+          ._albums()
+          .then(jsonres => {
+            return res
+              .json(jsonres)
+              .status(200)
+              .end();
+          })
+          .catch(error => {
+            res
+              .send(
+                `badGateway, the Album provider API is not available, please try again in a few minutes error ${error}`
+              )
+              .status(503);
+          });
+      } else {
+        res
+          .send('unauthorized acces, you must log In before performing this action')
+          .status(401)
+          .end();
+      }
+    });
+  }
 };
 
 const exist = (AlbumId, UserId) => {
