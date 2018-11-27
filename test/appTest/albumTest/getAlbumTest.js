@@ -29,14 +29,39 @@ describe('Getting the album list from a provided API, but not loged In ', () => 
 
 describe('Getting the album list of a user ', () => {
   it('if the User is loged in with a correct token, but the user have not purchased any album yet an empty list of purchased albums will be recived in JSON format', done => {
+    const user = {
+      name: 'name',
+      lastName: 'lname',
+      email: 'name@wolox.co',
+      password: '12345qwe',
+      role: 'Admin'
+    };
     chai
       .request(app)
-      .get('/user/1/albums')
-      .set('accestoken', validToken)
-      .then(res => {
-        expect(res).to.have.status(200);
-        expect(res.body).to.have.lengthOf(0);
-        done();
+      .post('/user')
+      .send(user)
+      .then(() => {
+        const data = {
+          email: 'name@wolox.co',
+          password: '12345qwe'
+        };
+        chai
+          .request(app)
+          .post('/user/sessions')
+          .send(data)
+          .then(respo => {
+            const Cookies = respo.headers['set-cookie'].pop().split(';')[0],
+              token = Cookies.substring(11);
+            chai
+              .request(app)
+              .get('/user/1/albums')
+              .set('accestoken', token)
+              .then(res => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.lengthOf(0);
+                done();
+              });
+          });
       });
   });
 });
@@ -135,28 +160,47 @@ describe('purchasing an album, loged In, and then getting the list of album  pic
 });
 describe('purchasing an album, loged In, and then getting the list of purchased albums from this user', () => {
   it('if the User is loged in with a correct token and an album was correctly purchased before, a list will apear with at least 1 album', done => {
+    const user = {
+      name: 'name',
+      lastName: 'lname',
+      email: 'name@wolox.co',
+      password: '12345qwe',
+      role: 'Admin'
+    };
     chai
       .request(app)
-      .get('/albums/6')
-      .set('accestoken', validToken)
-      .then(
+      .post('/user')
+      .send(user)
+      .then(() => {
+        const data = {
+          email: 'name@wolox.co',
+          password: '12345qwe'
+        };
         chai
           .request(app)
-          .get('/user/0/albums')
-          .set('accestoken', validToken)
-          .then(res => {
-            expect(res).to.have.status(200);
-            expect(res.body.length).to.have.lengthOf.at.least(1);
-            done();
-          })
-          .catch(error => {
-            done();
-          })
-      );
+          .post('/user/sessions')
+          .send(data)
+          .then(respo => {
+            const Cookies = respo.headers['set-cookie'].pop().split(';')[0],
+              token = Cookies.substring(11);
+            chai
+              .request(app)
+              .get('/user/1/albums')
+              .set('accestoken', token)
+              .then(res => {
+                expect(res).to.have.status(200);
+                expect(res.body.length).to.have.lengthOf.at.least(1);
+                done();
+              })
+              .catch(error => {
+                done();
+              });
+          });
+      });
   });
 });
 
-describe('getting the picture list from a purchased the album', () => {
+describe('getting the picture list from a non purchased the album', () => {
   it('if the User is loged in with a correct token but the album was  not purchased before, an empty list will apear.', done => {
     chai
       .request(app)

@@ -42,18 +42,20 @@ const autentication = req => {
 exports.sesion = (req, res) => {
   const usermail = req.body;
   const time = parseInt(secret.common.session.validTime) / 60;
-  return _user.findAll({ where: { email: usermail.email } }).then(
-    autentication(req)
-      .then(tokenSesion => {
-        return res
-          .cookie('accesToken', tokenSesion)
-          .send(`welcome! you can be inactive during ${time} minutes, before your session times out`)
-          .status(200)
-          .end();
-      })
-      .catch(err => {
-        res.status(503);
-        res.send(err);
-      })
-  );
+  return _user.findAll({ where: { email: usermail.email }, raw: true }).then(user => {
+    return _user.update({ sesion: true }, { where: { email: user[0].email } }).then(
+      autentication(req)
+        .then(tokenSesion => {
+          return res
+            .cookie('accesToken', tokenSesion)
+            .send(`welcome! you can be inactive during ${time} minutes, before your session times out`)
+            .status(200)
+            .end();
+        })
+        .catch(err => {
+          res.status(503);
+          res.send(err);
+        })
+    );
+  });
 };
