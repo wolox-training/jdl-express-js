@@ -8,6 +8,8 @@ const express = require('express'),
   errors = require('./app/middlewares/errors'),
   migrationsManager = require('./migrations'),
   logger = require('./app/logger'),
+  graphqlHTTP = require('express-graphql'),
+  service = require('./app/services/albumService'),
   DEFAULT_BODY_SIZE_LIMIT = 1024 * 1024 * 10,
   DEFAULT_PARAMETER_LIMIT = 10000;
 
@@ -28,6 +30,14 @@ const init = () => {
   module.exports = app;
 
   app.use('/docs', express.static(path.join(__dirname, 'docs')));
+  app.use(
+    '/albums',
+    graphqlHTTP({
+      schema: service.schema,
+      rootValue: service.getAll,
+      graphiql: true
+    })
+  );
 
   // Client must send "Content-Type: application/json" header
   app.use(bodyParser.json(bodyParserJsonConfig()));

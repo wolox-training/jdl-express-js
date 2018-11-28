@@ -13,7 +13,7 @@ exports.init = app => {
 
   // album
 
-  app.get('/albums', albums.getAlbums.getAlbum);
+  // app.get('/albums', albums.getAlbums.getAlbum);
   app.post('/albums/:id', albums.purchaseAlbum);
   app.get('/user/:userId/albums', albums.purchasedAlbums);
   app.get('/albums/:id/picture', albums.albumPictures);

@@ -3,7 +3,7 @@ const fetch = require('node-fetch'),
   albumController = require('./../controllers/albumController'),
   url = process.env.API_URL;
 
-const schema = buildSchema(`
+exports.schema = buildSchema(`
   type Query {
     getAlbum: [String]
   }
@@ -14,7 +14,7 @@ exports.get = {
   }
 };
 exports.getAll = () => {
-  return graphql(schema, '{getAlbum}', albumController.getAlbums);
+  return graphql(exports.schema, '{getAlbum}', albumController.getAlbums);
 };
 
 exports.getById = desired => {

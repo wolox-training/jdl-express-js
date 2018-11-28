@@ -6,8 +6,8 @@ exports.getAlbums = {
   getAlbum: (req, res) => {
     return usControl.authenticated(req).then(auth => {
       if (auth) {
-        return albumService.get
-          ._albums()
+        return albumService
+          .getAll()
           .then(jsonres => {
             return res
               .json(jsonres)
