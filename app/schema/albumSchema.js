@@ -16,9 +16,9 @@ exports.schema = buildSchema(`
   }
 `);
 exports.root = {
-  albums: () => {
-    return fetch(`${url}`).then(albm => {
-      return albm.json();
+  albums: (args, req) => {
+    return albumControll.getAlbums(req).then(response => {
+      return response;
     });
   }
 };

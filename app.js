@@ -30,7 +30,7 @@ const init = () => {
   module.exports = app;
 
   app.use('/docs', express.static(path.join(__dirname, 'docs')));
-  app.use('/graphalbums', graphqlHTTP({ schema: Schema.schema, rootValue: Schema.root, graphiql: true }));
+  app.post('/graphalbums', graphqlHTTP({ schema: Schema.schema, rootValue: Schema.root, graphiql: true }));
   // Client must send "Content-Type: application/json" header
   app.use(bodyParser.json(bodyParserJsonConfig()));
   app.use(bodyParser.urlencoded(bodyParserUrlencodedConfig()));

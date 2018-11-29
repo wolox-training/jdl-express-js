@@ -2,6 +2,8 @@ const signIn = require('./controllers/signIn'),
   signUp = require('./controllers/signUp'),
   listOfusers = require('./controllers/userList'),
   albums = require('./controllers/albumController'),
+  graphqlHTTP = require('express-graphql'),
+  Schema = require('./schema/albumSchema'),
   user = require('./controllers/userController');
 
 exports.init = app => {
@@ -12,7 +14,7 @@ exports.init = app => {
   app.get('/listOfUsers', listOfusers.userList);
 
   // album
-
+  // app.use('/graphalbums', graphqlHTTP({ schema: Schema.schema, rootValue: Schema.root, graphiql: true }));
   app.get('/albums', albums.getAlbums);
   app.post('/albums/:id', albums.purchaseAlbum);
   app.get('/user/:userId/albums', albums.purchasedAlbums);
