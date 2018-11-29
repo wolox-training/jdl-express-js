@@ -1,8 +1,5 @@
 const graphql = require('graphql'),
-  albumControll = require('./../controllers/albumController'),
-  albumService = require('./../services/albumService'),
-  fetch = require('node-fetch'),
-  url = process.env.API_URL;
+  albumControll = require('./../controllers/albumController');
 
 const { buildSchema } = graphql;
 
