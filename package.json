@@ -43,6 +43,7 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
+    "express-graphql": "^0.7.1",
     "har-validator": "^5.1.2",
     "jsonwebtoken": "^8.3.0",
     "jwt-simple": "^0.5.1",
