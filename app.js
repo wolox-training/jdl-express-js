@@ -3,6 +3,8 @@ const express = require('express'),
   Rollbar = require('rollbar'),
   morgan = require('morgan'),
   path = require('path'),
+  graphqlHTTP = require('express-graphql'),
+  Schema = require('./app/schema/albumSchema'),
   config = require('./config'),
   routes = require('./app/routes'),
   errors = require('./app/middlewares/errors'),
@@ -28,7 +30,7 @@ const init = () => {
   module.exports = app;
 
   app.use('/docs', express.static(path.join(__dirname, 'docs')));
-
+  app.use('/graphalbums', graphqlHTTP({ schema: Schema.schema, rootValue: Schema.root, graphiql: true }));
   // Client must send "Content-Type: application/json" header
   app.use(bodyParser.json(bodyParserJsonConfig()));
   app.use(bodyParser.urlencoded(bodyParserUrlencodedConfig()));
