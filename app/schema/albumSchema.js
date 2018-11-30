@@ -17,13 +17,9 @@ exports.schema = buildSchema(`
 `);
 exports.root = {
   albums: (args, req) => {
-    return albumControll.getAlbums(req).then(response => {
-      return response;
-    });
+    return albumControll.getAlbums(req);
   },
   delete: (args, req) => {
-    return albumControll.deleteAlbum(req, args).then(response => {
-      return response;
-    });
+    return albumControll.deleteAlbum(req, args);
   }
 };
