@@ -15,7 +15,6 @@ exports.init = app => {
 
   // album
   app.use('/graphalbums', graphqlHTTP({ schema: Schema.schema, rootValue: Schema.root, graphiql: true }));
-  app.use('/deletealbums', graphqlHTTP({ schema: Schema.schema, rootValue: Schema.root, graphiql: true }));
   app.get('/albums', albums.getAlbums);
   app.post('/albums/:id', albums.purchaseAlbum);
   app.get('/user/:userId/albums', albums.purchasedAlbums);

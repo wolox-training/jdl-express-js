@@ -108,7 +108,7 @@ describe('purchasing an album, loged In, and then deleting it', () => {
                   }`;
                 chai
                   .request(app)
-                  .get('/deletealbums/1')
+                  .get('/graphalbums')
                   .send(query)
                   .set('accestoken', token)
                   .then(final => {

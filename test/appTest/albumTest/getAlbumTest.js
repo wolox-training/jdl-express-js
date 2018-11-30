@@ -1,6 +1,5 @@
 const url = process.env.API_URL,
   validToken = process.env.TOKEN,
-  album_ = require('./../../../app/models/albums'),
   app = require('./../../../app'),
   chai = require('chai'),
   expect = chai.expect,
