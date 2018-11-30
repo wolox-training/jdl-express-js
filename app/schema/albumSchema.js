@@ -10,10 +10,16 @@ exports.schema = buildSchema(`
   },
   type Query {
       albums: [album]
+  },
+  type Mutation{
+  delete(id:Int): String
   }
 `);
 exports.root = {
   albums: (args, req) => {
-    return albumControll.getAlbums(req)
+    return albumControll.getAlbums(req);
+  },
+  delete: (args, req) => {
+    return albumControll.deleteAlbum(req, args);
   }
 };
