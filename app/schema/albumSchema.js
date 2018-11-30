@@ -14,8 +14,6 @@ exports.schema = buildSchema(`
 `);
 exports.root = {
   albums: (args, req) => {
-    return albumControll.getAlbums(req).then(response => {
-      return response;
-    });
+    return albumControll.getAlbums(req)
   }
 };
