@@ -22,7 +22,6 @@ exports.root = {
     });
   },
   delete: (args, req) => {
-    console.log(`hola `);
     return albumControll.deleteAlbum(req, args).then(response => {
       return response;
     });
