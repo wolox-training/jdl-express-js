@@ -8,10 +8,7 @@ exports.getAlbums = (req, res) => {
       return albumService
         .getAll()
         .then(jsonres => {
-          return res
-            .json(jsonres)
-            .status(200)
-            .end();
+          return jsonres;
         })
         .catch(error => {
           res
