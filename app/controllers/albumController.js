@@ -46,7 +46,7 @@ exports.purchaseAlbum = (req, res) => {
             return _album
               .create({
                 albumId: album.id,
-                name: album.title,
+                title: album.title,
                 userId: id[0].id
               })
               .then(
@@ -136,4 +136,32 @@ exports.albumPictures = (req, res) => {
           .end();
       }
     });
+};
+
+exports.deleteAlbum = (req, albumid) => {
+  return pickAlbum(req).then(album => {
+    return usControl
+      .getId(req.headers)
+      .then(id => {
+        return exist(albumid.id, id[0].id).then(purchasedAlbums => {
+          if (!purchasedAlbums.length) {
+            return `the album was not purchased before`;
+          } else {
+            return _album
+              .destroy({
+                where: {
+                  albumId: albumid.id,
+                  userId: id[0].id
+                }
+              })
+              .then(() => {
+                return `done, the album was deleted`;
+              });
+          }
+        });
+      })
+      .catch(error => {
+        return `an error ocurred: ${error}, please verify and retry`;
+      });
+  });
 };

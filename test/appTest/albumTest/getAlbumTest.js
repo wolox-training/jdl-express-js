@@ -1,5 +1,6 @@
 const url = process.env.API_URL,
   validToken = process.env.TOKEN,
+  album_ = require('./../../../app/models/albums'),
   app = require('./../../../app'),
   chai = require('chai'),
   expect = chai.expect,
@@ -238,75 +239,6 @@ describe('purchasing an album but not logged in', () => {
       .then(res => {
         expect(res).to.have.status(401);
         expect(res.message).to.equal('unauthorized acces, you must log In before performing this action');
-        done();
-      })
-      .catch(error => {
-        done();
-      });
-  });
-});
-
-describe('getting the list of all albums, loged In, with graphql ', () => {
-  it('if the User is loged in with a correct token a Json list with the requested information will be recibed', done => {
-    const user = {
-      name: 'name',
-      lastName: 'lname',
-      email: 'name@wolox.co',
-      password: '12345qwe',
-      role: 'Admin'
-    };
-    chai
-      .request(app)
-      .post('/user')
-      .send(user)
-      .then(() => {
-        const data = {
-          email: 'name@wolox.co',
-          password: '12345qwe'
-        };
-        chai
-          .request(app)
-          .post('/user/sessions')
-          .send(data)
-          .then(respo => {
-            const Cookies = respo.headers['set-cookie'].pop().split(';')[0],
-              token = Cookies.substring(11);
-            const query = `{
-              albums 
-                {
-                id,title}
-              }`;
-            chai
-              .request(app)
-              .get('/graphalbums')
-              .set('accestoken', token)
-              .send(query)
-              .then(res => {
-                expect(res).to.have.status(200);
-                expect(res.body.length).to.have.lengthOf.at.least(1);
-                done();
-              })
-              .catch(error => {
-                done();
-              });
-          });
-      });
-  });
-});
-
-describe('getting the list of all albums, but NOT loged In, with graphql ', () => {
-  it('if the User is loged in with a correct token a Json list with the requested information will be recibed', done => {
-    const query = `{
-      albums 
-        {
-        id,title}
-      }`;
-    chai
-      .request(app)
-      .get('/graphalbums')
-      .send(query)
-      .then(res => {
-        expect(res).to.have.property('errors');
         done();
       })
       .catch(error => {
