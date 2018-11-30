@@ -1,7 +1,10 @@
-const album_ = require('./../../../app/models/albums'),
+const url = process.env.API_CREATION_URL,
+  validToken = process.env.TOKEN,
+  album_ = require('./../../../app/models/albums'),
   app = require('./../../../app'),
   chai = require('chai'),
-  expect = chai.expect;
+  expect = chai.expect,
+  nock = require('nock');
 
 describe('getting the list of all albums, loged In, with graphql ', () => {
   it('if the User is loged in with a correct token a Json list with the requested information will be recibed', done => {
@@ -171,5 +174,71 @@ describe('deleting a not purchased album', () => {
               });
           });
       });
+  });
+});
+
+describe('creating an album', () => {
+  it('if the User is loged in with a correct token will be able to hit the endpoint API and create a new album', done => {
+    const user = {
+      name: 'name',
+      lastName: 'lname',
+      email: 'name@wolox.co',
+      password: '12345qwe',
+      role: 'Admin'
+    };
+    chai
+      .request(app)
+      .post('/user')
+      .send(user)
+      .then(() => {
+        const data = {
+          email: 'name@wolox.co',
+          password: '12345qwe'
+        };
+        chai
+          .request(app)
+          .post('/user/sessions')
+          .send(data)
+          .then(respo => {
+            const Cookies = respo.headers['set-cookie'].pop().split(';')[0],
+              token = Cookies.substring(11);
+            const query = `mutation {
+                create(title:"new album"){
+                  id
+                }
+              }`;
+            chai
+              .request(app)
+              .get('/deletealbums')
+              .send(query)
+              .set('accestoken', token)
+              .then(final => {
+                expect(final).to.have.status(200);
+              })
+
+              .catch(error => {
+                done();
+              });
+          });
+      });
+  });
+});
+
+describe('Getting the album list from a provided API ', () => {
+  it('if the User is loged in with a correct token a list of albums will be recived in JSON format', done => {
+    nock(`'${url}'`, {
+      reqheaders: {
+        accesToken: validToken
+      }
+    })
+      .post('/posts')
+      .query(
+        JSON.stringify({
+          title: 'test',
+          userId: 1
+        })
+      )
+      .reply(200)
+      .then(done());
   });
 });
