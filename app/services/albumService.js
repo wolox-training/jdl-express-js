@@ -19,7 +19,5 @@ exports.create = param => {
       body: '',
       userId: 1
     }
-  }).then(response => {
-    response.json();
-  });
+  }).then(response => response.json());
 };
