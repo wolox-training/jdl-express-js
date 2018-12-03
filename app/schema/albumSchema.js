@@ -12,8 +12,9 @@ exports.schema = buildSchema(`
       albums: [album]
   },
   type Mutation{
-  delete(id:Int): String
-  }
+  delete(id:Int): String,
+  create(title:String): album
+  },
 `);
 exports.root = {
   albums: (args, req) => {
@@ -21,5 +22,8 @@ exports.root = {
   },
   delete: (args, req) => {
     return albumControll.deleteAlbum(req, args);
+  },
+  create: (args, req) => {
+    return albumControll.createAlbum(req, args);
   }
 };

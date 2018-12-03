@@ -165,3 +165,24 @@ exports.deleteAlbum = (req, albumid) => {
       });
   });
 };
+
+exports.createAlbum = (req, params) => {
+  return usControl
+    .authenticated(req)
+    .then(authenticated => {
+      if (authenticated) {
+        return albumService.create(params).then(album => {
+          return album;
+        });
+      } else {
+        return 'Error, you need to sign In before performing this action';
+      }
+    })
+    .catch(error => {
+      if (error.message === 'jwt must be provided') {
+        return 'you need to log in';
+      } else {
+        return `an unexpected error ocurred: ${error}`;
+      }
+    });
+};
