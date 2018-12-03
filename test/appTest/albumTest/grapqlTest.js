@@ -224,14 +224,14 @@ describe('creating an album', () => {
   });
 });
 
-describe('Getting the album list from a provided API ', () => {
-  it('if the User is loged in with a correct token a list of albums will be recived in JSON format', done => {
+describe('creating an album from the external API ', () => {
+  it('if the User is loged in with a correct token an album will be created', done => {
     nock(`'${url}'`, {
       reqheaders: {
         accesToken: validToken
       }
     })
-      .post('/posts')
+      .post('/albums')
       .query(
         JSON.stringify({
           title: 'test',

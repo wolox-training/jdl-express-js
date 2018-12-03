@@ -12,14 +12,14 @@ exports.getPictures = id => {
   return fetch(`${url}/${id}/photos`).then(response => response.json());
 };
 exports.create = param => {
-  return fetch(`${creationUrl}/posts`, {
+  return fetch(`${creationUrl}/albums`, {
     method: 'POST',
-    body: JSON.stringify({
+    body: {
       title: param.title,
       body: '',
       userId: 1
-    })
+    }
   }).then(response => {
-    return response.json();
+    response.json();
   });
 };
