@@ -14,7 +14,7 @@
     "nsp": "./training/node_modules/.bin/nsp check",
     "lint": "./training/node_modules/eslint/bin/eslint.js \"**/*.js\"",
     "lint-diff": "git diff --name-only --cached --relative | grep \\\\.js$ | xargs ./node_modules/eslint/bin/eslint.js",
-    "lint-fix": "./training/training/node_modules/eslint/bin/eslint.js \"**/*.js\" --fix",
+    "lint-fix": "./training/node_modules/eslint/bin/eslint.js \"**/*.js\" --fix",
     "precommit": "npm run lint-diff",
     "outdated": "npm outdated --depth 0",
     "pretest": "npm run lint",
