@@ -19,8 +19,9 @@ services:
 
 before_script:
   - cd trainning
+  - npm install
   - psql -c "CREATE DATABASE bookstest;" -U postgres
-  - npm run migrations
+  - node_modules/.bin/sequelize db:migrate
   - npm run lint-fix
 
 cache: false
