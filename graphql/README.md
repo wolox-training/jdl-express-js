@@ -1,4 +1,4 @@
-# ExpressJS Bootstrap [![Build Status](https://api.travis-ci.org/Wolox/express-js-bootstrap.png)](https://travis-ci.org/wolox-training/jdl-express-js.svg?branch=master)
+# ExpressJS Bootstrap [![Build Status] Graphql implementation for the training tasks](https://travis-ci.org/wolox-training/jdl-express-js.svg?branch=master)
 
 Kickoff for [graphql](graphql.org) applications.
 
