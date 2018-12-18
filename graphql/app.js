@@ -25,7 +25,6 @@ const init = () => {
   const app = express();
   const port = config.common.port || 8080;
   module.exports = app;
-
   app.use(cors());
 
   // Client must send "Content-Type: application/json" header

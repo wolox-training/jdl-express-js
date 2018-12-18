@@ -60,7 +60,7 @@ exports.signUp = async (req, res) => {
     const encryptpw = await hashPassword(user.password);
     return _user
       .create({
-        name: user.name,
+        name: user.firstName,
         lastName: user.lastName,
         email: user.email,
         password: encryptpw,
