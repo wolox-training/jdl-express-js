@@ -1,6 +1,5 @@
-const { GraphQLNonNull, GraphQLBoolean } = require('graphql'),
-  { user: userModel } = require('../../models'),
-  { userInputType } = require('./types'),
+const { GraphQLNonNull, GraphQLBoolean, GraphQLString } = require('graphql'),
+  { userInputType, logInInputType } = require('./types'),
   fetch = require('node-fetch');
 
 exports.createUser = {
@@ -13,7 +12,6 @@ exports.createUser = {
     }
   },
   resolve: async (obj, { data }, context, info) => {
-    console.log(data);
     const user = await fetch('http://localhost:3001/user', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -21,7 +19,25 @@ exports.createUser = {
         'Content-Type': 'application/json'
       }
     });
-    console.log(`sali`);
     return true;
   }
+};
+
+exports.logIn = {
+  description: 'starts a new session',
+  type: GraphQLString,
+  args: {
+    data: {
+      name: 'data',
+      type: new GraphQLNonNull(logInInputType)
+    }
+  },
+  resolve: (obj, { data }, context, info) =>
+    fetch('http://localhost:3001/user/sessions', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(async dat => dat.text())
 };

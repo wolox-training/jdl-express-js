@@ -30,3 +30,22 @@ exports.userInputType = new GraphQLInputObjectType({
     password: { type: GraphQLString }
   }
 });
+
+exports.logInType = new GraphQLObjectType({
+  name: 'logInInformation',
+  fields: {
+    email: {
+      type: new GraphQLNonNull(GraphQLString)
+    },
+    password: { type: GraphQLString }
+  }
+});
+exports.logInInputType = new GraphQLInputObjectType({
+  name: 'logInInputInformation',
+  fields: {
+    email: {
+      type: new GraphQLNonNull(GraphQLString)
+    },
+    password: { type: GraphQLString }
+  }
+});
