@@ -7,7 +7,7 @@ module.exports = new GraphQLSchema({
     name: 'Query',
     fields: {
       ...books.queries,
-      ...users.users
+      ...users.queries
     }
   }),
   mutation: new GraphQLObjectType({

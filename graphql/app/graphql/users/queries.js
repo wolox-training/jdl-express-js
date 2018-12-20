@@ -1,22 +1,33 @@
-const { GraphQLList, GraphQLString, GraphQLNonNull } = require('graphql'),
-  { getSelectionSet } = require('../utils'),
-  { bookType } = require('./types'),
-  { book: bookModel } = require('../../models');
+const { GraphQLList, GraphQLNonNull, GraphQLInt } = require('graphql'),
+  { listOfUserType } = require('./types'),
+  fetch = require('node-fetch');
 
-exports.book = {
-  description: 'it returns a single book, can be queried by any field',
-  type: bookType,
+exports.userList = {
+  description: 'it returns a list of users',
+  type: listOfUserType,
   args: {
-    name: {
-      name: 'title',
-      type: GraphQLNonNull(GraphQLString)
+    page: {
+      name: 'page',
+      type: GraphQLNonNull(GraphQLInt)
+    },
+    limit: {
+      name: 'limit',
+      type: GraphQLNonNull(GraphQLInt)
     }
   },
-  resolve: async (obj, { name }, context, info) => {
-    const attributes = getSelectionSet(info);
-    return bookModel.findOne({
-      attributes,
-      where: { name }
+  resolve: async (obj, data, context, info) => {
+    const list = await fetch('http://localhost:3001/listOfUsers', {
+      method: 'GET',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+        // eslint-disable-next-line prettier/prettier
+        'accestoken': context.headers.accestoken
+      }
+    }).then(dat => {
+      return dat.json();
     });
+    console.log(`############################${list.rows}`);
+    return list;
   }
 };
