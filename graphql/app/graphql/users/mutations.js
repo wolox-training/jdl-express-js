@@ -32,12 +32,19 @@ exports.logIn = {
       type: new GraphQLNonNull(logInInputType)
     }
   },
-  resolve: (obj, { data }, context, info) =>
-    fetch('http://localhost:3001/user/sessions', {
+  resolve: async (obj, { data }, context, info) => {
+    const session = await fetch('http://localhost:3001/user/sessions', {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {
         'Content-Type': 'application/json'
       }
-    }).then(async dat => dat.text())
+    }).then(async dat => {
+      return dat;
+    });
+    const Cookies = session.headers.get('set-cookie').split(';')[0];
+    const token = Cookies.substring(11);
+    context.res.header('accesToken', token);
+    return session.text();
+  }
 };
