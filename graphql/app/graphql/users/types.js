@@ -10,7 +10,7 @@ const {
 exports.userType = new GraphQLObjectType({
   name: 'User',
   fields: {
-    firstName: {
+    name: {
       type: new GraphQLNonNull(GraphQLString)
     },
     lastName: { type: GraphQLString },
@@ -22,7 +22,7 @@ exports.userType = new GraphQLObjectType({
 exports.userInputType = new GraphQLInputObjectType({
   name: 'UserInput',
   fields: {
-    firstName: {
+    name: {
       type: new GraphQLNonNull(GraphQLString)
     },
     lastName: { type: GraphQLString },

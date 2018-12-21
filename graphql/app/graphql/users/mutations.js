@@ -13,7 +13,6 @@ exports.createUser = {
     }
   },
   resolve: async (obj, { data }, context, info) => {
-    console.log(data);
     const user = await fetch('http://localhost:3001/user', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -21,7 +20,6 @@ exports.createUser = {
         'Content-Type': 'application/json'
       }
     });
-    console.log(`sali`);
     return true;
   }
 };
