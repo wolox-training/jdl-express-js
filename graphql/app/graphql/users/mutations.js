@@ -1,11 +1,10 @@
-const { GraphQLNonNull, GraphQLBoolean } = require('graphql'),
-  { user: userModel } = require('../../models'),
+const { GraphQLNonNull, GraphQLString } = require('graphql'),
   { userInputType } = require('./types'),
   fetch = require('node-fetch');
 
 exports.createUser = {
   description: 'creates a new user',
-  type: GraphQLBoolean,
+  type: GraphQLString,
   args: {
     data: {
       name: 'data',
@@ -20,6 +19,6 @@ exports.createUser = {
         'Content-Type': 'application/json'
       }
     });
-    return true;
+    return user.text();
   }
 };
