@@ -43,11 +43,6 @@ const init = () => {
 
   Promise.resolve()
     .then(() => {
-      if (!config.isTesting) {
-        return migrationsManager.check();
-      }
-    })
-    .then(() => {
       app.use(
         '/',
         graphqlHTTP(req => ({
